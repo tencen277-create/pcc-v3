@@ -1,0 +1,45 @@
+{
+  "name": "Project Command Center v3",
+  "short_name": "PCC v3",
+  "description": "Your AI-powered project command center — powered by Francois",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1D9E75",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "business"],
+  "shortcuts": [
+    {
+      "name": "Ask Francois",
+      "short_name": "Francois",
+      "description": "Open Francois AI chat",
+      "url": "./index.html#chat"
+    },
+    {
+      "name": "Quick Add",
+      "short_name": "Add note",
+      "description": "Log a note, action or idea",
+      "url": "./index.html#add"
+    },
+    {
+      "name": "Finance",
+      "short_name": "Milestone",
+      "description": "Check milestone progress",
+      "url": "./index.html#finance"
+    }
+  ]
+}

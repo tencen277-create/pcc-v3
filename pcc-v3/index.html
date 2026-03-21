@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1D9E75">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PCC v3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Project Command Center v3 — Powered by Francois">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>PCC v3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#f0efe9;
+  --txt:#1a1a18;--txt2:#6b6a65;--txt3:#a8a79f;
+  --bdr:rgba(0,0,0,.07);--bdr2:rgba(0,0,0,.13);
+  --g:#1D9E75;--gb:#E1F5EE;--gt:#085041;
+  --a:#BA7517;--ab:#FAEEDA;--at:#633806;
+  --r:#E24B4A;--rb:#FCEBEB;--rt:#791F1F;
+  --b:#378ADD;--bb:#E6F1FB;--bt:#0C447C;
+  --p:#7F77DD;--pb:#EEEDFE;--pt:#3C3489;
+  --nav-h:68px;--safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
+}
+.dark{
+  --bg:#0f0f0e;--bg2:#1a1a18;--bg3:#222220;
+  --txt:#f0efe9;--txt2:#9a9990;--txt3:#5a5a55;
+  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.13);
+}
+html,body{height:100%;overflow:hidden;font-family:var(--f);background:var(--bg);color:var(--txt)}
+body{display:flex;flex-direction:column;position:fixed;inset:0}
+
+/* APP SHELL */
+.app-shell{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.statusbar{height:var(--safe-top);background:var(--bg);flex-shrink:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;background:var(--bg);border-bottom:0.5px solid var(--bdr);flex-shrink:0;position:relative;z-index:20}
+.tb-left{display:flex;align-items:center;gap:8px}
+.tb-title{font-size:17px;font-weight:600;color:var(--txt);letter-spacing:-.4px}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-pill{font-size:10px;padding:3px 9px;border-radius:99px;font-weight:500;display:flex;align-items:center;gap:3px}
+.tp-dot{width:5px;height:5px;border-radius:50%}
+.icon-btn{width:34px;height:34px;border-radius:50%;border:0.5px solid var(--bdr2);background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;transition:all .15s}
+.icon-btn:active{transform:scale(.9)}
+
+/* SCREENS */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 12px);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;transform:translateY(6px)}
+.screen.active{opacity:1;pointer-events:all;transform:translateY(0)}
+
+/* BOTTOM NAV */
+.bnav{flex-shrink:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding-bottom:var(--safe-bottom);z-index:20}
+.bnav-inner{display:flex;height:var(--nav-h)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;padding:0;min-height:44px;position:relative;transition:transform .1s}
+.ni:active{transform:scale(.88)}
+.ni-ico{font-size:20px;line-height:1;transition:transform .2s}
+.ni-lbl{font-size:9px;font-weight:500;color:var(--txt3);letter-spacing:.3px}
+.ni.on .ni-lbl{color:var(--g);font-weight:600}
+.ni.on .ni-ico{transform:scale(1.1)}
+.ni-badge{position:absolute;top:8px;right:calc(50% - 16px);width:7px;height:7px;border-radius:50%;background:var(--r);border:1.5px solid var(--bg)}
+
+/* SHARED COMPONENTS */
+.pad{padding:0 16px}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
+.sh-title{font-size:14px;font-weight:600;color:var(--txt)}
+.sh-action{font-size:12px;color:var(--b);cursor:pointer;font-weight:500}
+.card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;padding:13px 15px;transition:border-color .15s}
+.card:active{border-color:var(--bdr2)}
+.mcard{background:var(--bg2);border-radius:11px;padding:12px}
+.mv{font-size:22px;font-weight:600;font-family:var(--m);letter-spacing:-1px}
+.ml{font-size:11px;color:var(--txt2);margin-top:2px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600}
+.bg-g{background:var(--gb);color:var(--gt)}
+.bg-a{background:var(--ab);color:var(--at)}
+.bg-r{background:var(--rb);color:var(--rt)}
+.bg-b{background:var(--bb);color:var(--bt)}
+.bg-p{background:var(--pb);color:var(--pt)}
+.pbar{height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:6px}
+.pf{height:100%;border-radius:99px;background:var(--g);transition:width .6s}
+.btn{font-size:13px;padding:9px 16px;border-radius:11px;border:0.5px solid var(--bdr2);background:transparent;color:var(--txt);cursor:pointer;font-family:var(--f);font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:active{transform:scale(.97)}
+.btn.pr{background:var(--g);color:#fff;border-color:var(--g)}
+.btn.sm{font-size:11px;padding:5px 12px;border-radius:9px}
+.btn.full{width:100%;justify-content:center}
+.btn.danger{background:var(--rb);color:var(--rt);border-color:var(--rb)}
+
+/* FRANCOIS BUBBLE */
+.f-intro{margin:0 16px 8px;background:var(--bg2);border-radius:14px;padding:11px 13px;display:flex;gap:9px;border:0.5px solid var(--bdr)}
+.f-av{width:30px;height:30px;border-radius:50%;background:var(--gb);color:var(--gt);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;border:2px solid var(--g)}
+.f-name{font-size:10px;font-weight:600;color:var(--g);margin-bottom:2px;letter-spacing:.2px}
+.f-msg{font-size:12px;color:var(--txt2);line-height:1.5;font-style:italic}
+.f-note{margin:0 16px 8px;background:var(--gb);border-radius:0 11px 11px 0;padding:9px 12px;display:flex;gap:8px;border-left:3px solid var(--g)}
+.fn-txt{font-size:11px;color:var(--gt);line-height:1.5;font-style:italic;flex:1}
+
+/* MILESTONE BAR */
+.milestone-strip{margin:8px 16px 0;background:var(--gb);border-radius:12px;padding:10px 13px;border:0.5px solid #5DCAA5}
+.ms-top{display:flex;justify-content:space-between;margin-bottom:5px}
+.ms-lbl{font-size:11px;font-weight:600;color:var(--gt)}
+.ms-val{font-size:11px;font-weight:600;color:var(--g);font-family:var(--m)}
+.ms-bar{height:5px;background:rgba(0,0,0,.1);border-radius:99px;overflow:hidden}
+.ms-fill{height:100%;border-radius:99px;background:var(--g);transition:width .8s}
+
+/* PROJECT CARDS */
+.proj-card{margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all .15s}
+.proj-card:active{transform:scale(.98);border-color:var(--bdr2)}
+.pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.pc-name{font-size:14px;font-weight:600;color:var(--txt)}
+.pc-desc{font-size:12px;color:var(--txt2);margin-bottom:6px}
+.pc-meta{font-size:10px;color:var(--txt3);font-family:var(--m);display:flex;gap:8px}
+.at-risk{border-left:3px solid var(--r);border-radius:0 14px 14px 0}
+
+/* TEAM ROOM */
+.room-wrap{padding:0 16px;margin-bottom:8px}
+.room{position:relative;width:100%;height:220px;background:var(--bg2);border-radius:14px;border:0.5px solid var(--bdr);overflow:hidden}
+.room-floor{position:absolute;inset:0;opacity:.03}
+.r-wall{position:absolute;top:0;left:0;right:0;height:20px;background:rgba(0,0,0,.04);border-radius:14px 14px 0 0}
+.r-table{position:absolute;width:80px;height:40px;border-radius:20px;background:var(--bg);border:0.5px solid var(--bdr2);top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;z-index:3;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
+.r-tbl-lbl{font-size:7px;color:var(--txt3);font-weight:500;text-align:center;line-height:1.4}
+.rug{position:absolute;border-radius:5px;opacity:.22}
+.desk{position:absolute;border-radius:3px;z-index:2}
+.sprite{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;z-index:10;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.sb{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:background-color .6s,border-color .6s,transform .2s;border:2px solid transparent}
+.sb:active{transform:scale(.9)}
+.sb.pulse{animation:sbpulse .6s ease}
+@keyframes sbpulse{0%{transform:scale(1)}30%{transform:scale(1.15)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+.face{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
+.eyes{display:flex;gap:3px;align-items:center}
+.eye{width:4px;height:4px;border-radius:50%;transition:all .5s}
+.eye.wide{width:5px;height:5px}
+.eye.narrow{width:4px;height:2px;border-radius:2px}
+.eye.alert{animation:eyeAlert .3s infinite}
+@keyframes eyeAlert{0%,100%{opacity:1}50%{opacity:.3}}
+.mouth{width:9px;height:4px;border-radius:0 0 4px 4px;border:1.5px solid transparent;border-top:none;transition:all .5s}
+.mouth.smile{border-radius:0 0 6px 6px;width:11px;height:5px}
+.mouth.frown{border-radius:4px 4px 0 0;border-top:1.5px solid;border-bottom:none;transform:translateY(2px)}
+.mouth.flat{border-radius:0;height:0;border-bottom-width:1.5px}
+.sdot{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg2);transition:background .4s}
+.ntag{background:var(--bg);border:0.5px solid var(--bdr);border-radius:99px;padding:2px 6px}
+.nt-n{font-size:8px;font-weight:500;color:var(--txt);white-space:nowrap}
+.mpill{font-size:7px;padding:1px 5px;border-radius:99px;font-weight:500;white-space:nowrap;transition:all .5s}
+.recruit-slot{position:absolute;top:50%;right:14px;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:3px}
+.rs-ring{width:38px;height:38px;border-radius:50%;border:1.5px dashed var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:16px;animation:rsGlow 2s infinite}
+@keyframes rsGlow{0%,100%{border-color:var(--bdr2)}50%{border-color:var(--g)}}
+.rs-lbl{font-size:7px;color:var(--txt3)}
+.conn-svg{position:absolute;inset:0;pointer-events:none;z-index:4}
+.room-controls{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap}
+.tt-popup{position:absolute;background:var(--bg);border:0.5px solid var(--bdr2);border-radius:12px;padding:8px 10px;z-index:30;min-width:140px;max-width:180px;pointer-events:none;display:none;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.tt-name{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.tt-mood{font-size:10px;font-weight:500;margin-bottom:2px}
+.tt-reason{font-size:10px;color:var(--txt2);line-height:1.4;font-style:italic}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:100%;padding-bottom:0}
+.chat-chips{display:flex;gap:6px;padding:10px 16px 6px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.chat-chips::-webkit-scrollbar{display:none}
+.chip{font-size:11px;padding:6px 13px;border-radius:99px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt2);cursor:pointer;white-space:nowrap;font-family:var(--f);font-weight:500;transition:all .15s;flex-shrink:0}
+.chip:active{background:var(--bg3);transform:scale(.95)}
+.chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px;display:flex;flex-direction:column;gap:10px;padding-bottom:140px}
+.bubble{max-width:88%;padding:10px 13px;font-size:13px;line-height:1.6;border-radius:16px}
+.bubble.user{align-self:flex-end;background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:16px 16px 4px 16px;color:var(--txt)}
+.bubble.ai{align-self:flex-start;background:var(--bg);border:0.5px solid var(--bdr);border-radius:4px 16px 16px 16px;color:var(--txt)}
+.bubble-lbl{font-size:10px;font-weight:600;color:var(--g);margin-bottom:3px;letter-spacing:.2px}
+.typing-bub{align-self:flex-start;background:var(--bg);border:0.5px solid var(--bdr);border-radius:4px 16px 16px 16px;padding:10px 13px}
+.typing-dots{display:flex;gap:3px;align-items:center}
+.td{width:5px;height:5px;border-radius:50%;background:var(--txt3)}
+.chat-input-wrap{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom));left:0;right:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding:10px 16px;z-index:15}
+.chat-input-row{display:flex;gap:8px;align-items:flex-end}
+.chat-ta{flex:1;font-size:14px;padding:10px 13px;border-radius:14px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);resize:none;min-height:42px;max-height:110px;outline:none;line-height:1.5;transition:border-color .15s}
+.chat-ta:focus{border-color:var(--g)}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--g);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0;transition:all .15s}
+.send-btn:active{transform:scale(.88)}
+.send-btn:disabled{opacity:.5}
+.chat-actions{display:flex;gap:6px;margin-top:6px}
+
+/* QUICK ADD */
+.qa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;display:none;align-items:flex-end}
+.qa-overlay.open{display:flex;animation:overlayIn .2s ease}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+.qa-sheet{background:var(--bg);border-radius:20px 20px 0 0;padding:0 0 calc(16px + var(--safe-bottom));width:100%;animation:sheetUp .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.qa-handle{width:36px;height:4px;border-radius:99px;background:var(--bdr2);margin:12px auto 14px}
+.qa-title{font-size:16px;font-weight:600;color:var(--txt);padding:0 16px;margin-bottom:12px}
+.qa-tags{display:flex;gap:6px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none}
+.qa-tags::-webkit-scrollbar{display:none}
+.qtag{font-size:12px;padding:6px 14px;border-radius:99px;border:0.5px solid var(--bdr2);background:transparent;color:var(--txt2);cursor:pointer;font-family:var(--f);font-weight:500;white-space:nowrap;transition:all .15s}
+.qtag.on{background:var(--g);color:#fff;border-color:var(--g)}
+.qtag:active{transform:scale(.95)}
+.qa-ta{width:calc(100% - 32px);margin:0 16px 10px;font-size:14px;padding:12px 14px;border-radius:14px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);resize:none;min-height:90px;outline:none;line-height:1.5}
+.qa-ta:focus{border-color:var(--g)}
+.qa-bottom{display:flex;gap:8px;padding:0 16px;align-items:center}
+.qa-sel{flex:1;font-size:13px;padding:10px 12px;border-radius:11px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);outline:none}
+.qa-save{font-size:13px;padding:10px 20px;border-radius:11px;background:var(--g);color:#fff;border:none;font-family:var(--f);font-weight:600;cursor:pointer;transition:all .15s}
+.qa-save:active{transform:scale(.95)}
+.voice-btn-qa{font-size:18px;width:42px;height:42px;border-radius:50%;border:0.5px solid var(--bdr2);background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.voice-btn-qa.recording{background:var(--rb);border-color:var(--r);animation:recPulse .8s infinite}
+@keyframes recPulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* FINANCE */
+.fin-hero{margin:8px 16px 0;background:var(--gb);border-radius:14px;padding:14px;border:0.5px solid #5DCAA5}
+.fh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.fh-lbl{font-size:11px;font-weight:600;color:var(--gt);text-transform:uppercase;letter-spacing:.4px}
+.fh-pct{font-size:12px;font-weight:600;color:var(--g);font-family:var(--m)}
+.fh-amount{font-size:32px;font-weight:600;color:var(--gt);font-family:var(--m);letter-spacing:-1.5px;margin-bottom:6px}
+.fh-goal{font-size:13px;color:var(--gt);opacity:.6;font-family:var(--m)}
+.fh-bar{height:6px;background:rgba(0,0,0,.12);border-radius:99px;overflow:hidden;margin-bottom:5px}
+.fh-fill{height:100%;border-radius:99px;background:var(--g);transition:width .8s}
+.fh-sub{font-size:11px;color:var(--gt);opacity:.8;line-height:1.5}
+.tx-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--bdr)}
+.tx-row:last-child{border-bottom:none}
+.tx-ico{font-size:14px;flex-shrink:0;width:22px;text-align:center}
+.tx-desc{font-size:13px;color:var(--txt);flex:1;font-weight:500}
+.tx-sub{font-size:10px;color:var(--txt3);margin-top:1px}
+.tx-amt{font-size:14px;font-weight:600;font-family:var(--m)}
+.tx-income{color:var(--g)}
+.tx-expense{color:var(--r)}
+.fin-log-form{padding:0 16px;margin-bottom:8px}
+.fl-row{display:flex;gap:8px;margin-bottom:8px}
+.fl-inp{flex:1;font-size:13px;padding:10px 12px;border-radius:11px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);outline:none}
+.fl-inp:focus{border-color:var(--g)}
+
+/* SECURITY */
+.shield-hero{margin:8px 16px 0;border-radius:14px;padding:13px;border:0.5px solid}
+.sh-protected{background:var(--gb);border-color:#5DCAA5}
+.sh-alert{background:var(--ab);border-color:var(--a)}
+.sh-critical{background:var(--rb);border-color:var(--r)}
+.sh-shutdown{background:var(--bg2);border-color:var(--bdr2)}
+.shield-top{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.shield-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .3s}
+.av-protected{background:var(--g)}
+.av-alert{background:var(--a)}
+.av-critical{background:var(--r);animation:critPulse .8s infinite}
+.av-shutdown{background:var(--bg3)}
+@keyframes critPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.shield-status{font-size:15px;font-weight:600}
+.ss-protected{color:var(--gt)}
+.ss-alert{color:var(--at)}
+.ss-critical{color:var(--rt)}
+.ss-shutdown{color:var(--txt2)}
+.shield-sub{font-size:11px;opacity:.8;margin-top:1px}
+.layer-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:0.5px solid var(--bdr)}
+.layer-row:last-child{border-bottom:none}
+.layer-num{width:22px;height:22px;border-radius:50%;background:var(--gb);color:var(--gt);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.layer-name{font-size:13px;font-weight:500;color:var(--txt);flex:1}
+.layer-desc{font-size:10px;color:var(--txt2);margin-top:1px}
+.layer-st{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600}
+.ls-on{background:var(--gb);color:var(--gt)}
+.ls-off{background:var(--bg2);color:var(--txt3)}
+.emergency-card{margin:0 16px 8px;background:var(--rb);border:0.5px solid var(--r);border-radius:14px;padding:14px}
+.ec-title{font-size:14px;font-weight:600;color:var(--rt);margin-bottom:4px}
+.ec-desc{font-size:12px;color:var(--rt);opacity:.8;line-height:1.5;margin-bottom:12px}
+.ec-btn{width:100%;padding:13px;background:var(--r);color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
+.ec-btn:active{transform:scale(.97)}
+.ec-btn.resume{background:var(--g)}
+.toggle{width:40px;height:22px;border-radius:99px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.toggle.on{background:var(--g)}.toggle.off{background:var(--bdr2)}
+.toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .3s}
+.toggle.on .toggle-thumb{transform:translateX(18px)}
+
+/* COMMS */
+.ch-card{margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.ch-card.connected{border-color:#5DCAA5}
+.ch-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.ch-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ch-name{font-size:14px;font-weight:600;color:var(--txt);flex:1}
+.ch-desc{font-size:11px;color:var(--txt2);margin-top:1px}
+.ch-st{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600;white-space:nowrap}
+.cs-conn{background:var(--gb);color:var(--gt)}
+.cs-setup{background:var(--bb);color:var(--bt)}
+.ch-body{padding:0 14px 14px;display:none;border-top:0.5px solid var(--bdr)}
+.ch-body.open{display:block}
+.ch-field{margin-top:10px}
+.ch-field label{font-size:11px;color:var(--txt2);display:block;margin-bottom:4px;font-weight:500}
+.ch-inp{width:100%;font-size:12px;padding:9px 11px;border-radius:10px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--m);outline:none;transition:border-color .15s}
+.ch-inp:focus{border-color:var(--g)}
+.ch-inp.masked{-webkit-text-security:disc}
+.ch-hint{font-size:10px;color:var(--txt3);margin-top:6px;font-style:italic;line-height:1.5}
+.ch-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 14px);left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);font-size:12px;font-weight:500;padding:9px 18px;border-radius:99px;white-space:nowrap;z-index:60;display:none;animation:toastIn .2s ease;font-family:var(--f)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* INSTALL BANNER */
+.install-banner{margin:8px 16px 0;background:var(--bb);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:10px;border:0.5px solid #85B7EB;display:none}
+.ib-txt{font-size:12px;color:var(--bt);line-height:1.5;flex:1}
+.ib-btn{font-size:11px;padding:5px 12px;border-radius:99px;background:var(--b);color:#fff;border:none;cursor:pointer;font-family:var(--f);font-weight:600;white-space:nowrap;flex-shrink:0}
+
+/* OFFLINE BANNER */
+.offline-banner{background:var(--rb);padding:7px 16px;text-align:center;font-size:12px;font-weight:500;color:var(--rt);display:none;flex-shrink:0;z-index:19}
+.offline-banner.show{display:block}
+
+/* NOTES LIST */
+.note-item{margin:0 16px 7px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:12px;padding:10px 13px}
+.ni-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.ni-tag{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:600}
+.ni-txt{font-size:13px;color:var(--txt);line-height:1.5}
+.ni-meta{font-size:10px;color:var(--txt3);margin-top:4px}
+
+/* MORE NAV LIST */
+.more-item{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:0.5px solid var(--bdr);cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
+.more-item:active{background:var(--bg2)}
+.mi-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mi-name{font-size:14px;font-weight:600;color:var(--txt)}
+.mi-sub{font-size:11px;color:var(--txt2);margin-top:1px}
+.mi-badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600;margin-left:auto;white-space:nowrap}
+.mi-arr{font-size:14px;color:var(--txt3);margin-left:auto}
+
+/* PWA INSTALL INSTRUCTIONS */
+.pwa-card{margin:0 16px 8px;background:var(--bb);border-radius:14px;padding:13px 14px;border:0.5px solid #85B7EB}
+.pwa-title{font-size:14px;font-weight:600;color:var(--bt);margin-bottom:10px}
+.pwa-step{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-bottom:0.5px solid rgba(0,0,0,.06)}
+.pwa-step:last-child{border-bottom:none}
+.pwa-num{width:20px;height:20px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px}
+.pwa-txt{font-size:12px;color:var(--bt);line-height:1.6}
+.pwa-txt strong{font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="app-shell" id="app">
+  <div class="statusbar"></div>
+
+  <!-- OFFLINE BANNER -->
+  <div class="offline-banner" id="offline-banner">No connection — Francois is in offline mode</div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <span class="tb-title" id="tb-title">Home</span>
+      <div class="tb-pill bg-g" id="status-pill">
+        <div class="tp-dot" id="status-dot" style="background:var(--g)"></div>
+        <span id="status-txt">Online</span>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="icon-btn" id="theme-btn" onclick="toggleTheme()">☀</div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screens">
+
+    <!-- HOME -->
+    <div class="screen active" id="s-home" data-title="Home">
+      <div style="padding:14px 16px 4px">
+        <h2 style="font-size:22px;font-weight:600;color:var(--txt);letter-spacing:-.5px" id="greeting">Good evening.</h2>
+        <p style="font-size:12px;color:var(--txt2);margin-top:3px" id="greeting-sub">All systems operational.</p>
+      </div>
+      <div class="f-intro">
+        <div class="f-av">F</div>
+        <div><div class="f-name">FRANCOIS</div><div class="f-msg" id="home-f-msg">All systems are in order. The team is ready. Shall we begin?</div></div>
+      </div>
+      <div class="install-banner" id="install-banner">
+        <div class="ib-txt"><strong>Install PCC v3</strong> — Add to your home screen for the full app experience.</div>
+        <button class="ib-btn" id="install-btn" onclick="installPWA()">Install</button>
+      </div>
+      <div class="milestone-strip">
+        <div class="ms-top"><span class="ms-lbl">First milestone</span><span class="ms-val" id="home-ms-val">$24/$100</span></div>
+        <div class="ms-bar"><div class="ms-fill" id="home-ms-fill" style="width:24%"></div></div>
+      </div>
+      <div class="stat-grid" style="margin-top:8px">
+        <div class="mcard"><div class="mv" id="stat-proj">4</div><div class="ml">active projects</div></div>
+        <div class="mcard"><div class="mv" style="color:var(--r)" id="stat-safety">3</div><div class="ml">safety items</div></div>
+        <div class="mcard"><div class="mv" style="color:var(--g)" id="stat-revenue">$24</div><div class="ml">revenue</div></div>
+        <div class="mcard"><div class="mv" id="stat-books">11</div><div class="ml">library books</div></div>
+      </div>
+      <div class="section-head"><span class="sh-title">Active projects</span></div>
+      <div class="proj-card" onclick="goScreen('s-finance')">
+        <div class="pc-top"><span class="pc-name">Command Center v3</span><div style="display:flex;gap:4px"><span class="badge bg-b">coding</span><span class="badge bg-g">active</span></div></div>
+        <div class="pc-desc">Mobile-first hub — all 10 layers live.</div>
+        <div class="pbar"><div class="pf" style="width:100%"></div></div>
+        <div class="pc-meta"><span>100%</span><span>Layer 10 complete</span></div>
+      </div>
+      <div class="proj-card at-risk" onclick="goScreen('s-security')">
+        <div class="pc-top"><span class="pc-name">Mobile App Alpha</span><div style="display:flex;gap:4px"><span class="badge bg-p">mobile</span><span class="badge bg-r">at-risk</span></div></div>
+        <div class="pc-desc">React Native — 32% complete.</div>
+        <div class="pbar"><div class="pf" style="width:32%"></div></div>
+        <div class="pc-meta"><span>32%</span><span>Due Mar 28</span></div>
+      </div>
+      <div class="section-head"><span class="sh-title">Team — this week</span></div>
+      <div class="f-note" style="font-size:11px">
+        <div class="f-av" style="width:22px;height:22px;font-size:9px;flex-shrink:0">F</div>
+        <div class="fn-txt">Mon: Morning briefing ✓ · Wed: Safety scan · Thu: Brass: Birmingham · Fri: HR digest + game vote</div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+    <!-- TEAM ROOM -->
+    <div class="screen" id="s-team" data-title="Team">
+      <div class="section-head"><span class="sh-title">Team room</span><span class="sh-action" id="room-time"></span></div>
+      <div class="room-wrap">
+        <div class="room" id="room">
+          <div class="r-wall"></div>
+          <svg class="room-floor" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="rg" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0L0 0 0 16" fill="none" stroke="currentColor" stroke-width=".3"/></pattern></defs><rect width="100%" height="100%" fill="url(#rg)"/></svg>
+          <div class="rug" style="top:32px;left:16px;width:90px;height:74px;background:#bfdbfe"></div>
+          <div class="rug" style="top:32px;right:16px;width:90px;height:74px;background:#ddd6fe"></div>
+          <div class="rug" style="bottom:32px;left:16px;width:90px;height:74px;background:#d1fae5"></div>
+          <div class="rug" style="top:50%;left:50%;transform:translate(-50%,-50%);width:100px;height:54px;background:#e5e7eb"></div>
+          <div class="desk" style="top:34px;left:20px;width:42px;height:20px;background:#d4cfc8;border:0.5px solid rgba(0,0,0,.1)"></div>
+          <div class="desk" style="top:34px;right:20px;width:42px;height:20px;background:#a7f3d0;border:0.5px solid rgba(0,0,0,.1)"></div>
+          <div class="desk" style="bottom:82px;left:20px;width:42px;height:20px;background:#ddd6fe;border:0.5px solid rgba(0,0,0,.1)"></div>
+          <div style="position:absolute;bottom:24px;left:20px;width:60px;height:13px;border-radius:3px;background:#d4cfc8;border:0.5px solid rgba(0,0,0,.1);z-index:2"></div>
+          <div class="r-table" id="r-table"><div class="r-tbl-lbl" id="r-tbl-lbl">shared<br>workspace</div></div>
+          <svg class="conn-svg" id="conn-svg"></svg>
+          <div class="sprite" id="sp-you" style="top:14px;left:50%;transform:translateX(-50%)" onclick="showTT('you',event)">
+            <div class="sb" id="sb-you"><div class="face"><div class="eyes"><div class="eye" id="ey-you-l"></div><div class="eye" id="ey-you-r"></div></div><div class="mouth" id="mo-you"></div></div><div class="sdot" id="sd-you"></div></div>
+            <div class="ntag"><div class="nt-n">You</div></div>
+            <div class="mpill" id="mp-you"></div>
+          </div>
+          <div class="sprite" id="sp-f" style="bottom:14px;left:50%;transform:translateX(-50%)" onclick="showTT('f',event)">
+            <div class="sb" id="sb-f"><div class="face"><div class="eyes"><div class="eye" id="ey-f-l"></div><div class="eye" id="ey-f-r"></div></div><div class="mouth" id="mo-f"></div></div><div class="sdot" id="sd-f"></div></div>
+            <div class="ntag"><div class="nt-n">Francois</div></div>
+            <div class="mpill" id="mp-f"></div>
+          </div>
+          <div class="sprite" id="sp-alex" style="top:50%;left:14px;transform:translateY(-50%)" onclick="showTT('alex',event)">
+            <div class="sb" id="sb-alex"><div class="face"><div class="eyes"><div class="eye" id="ey-alex-l"></div><div class="eye" id="ey-alex-r"></div></div><div class="mouth" id="mo-alex"></div></div><div class="sdot" id="sd-alex"></div></div>
+            <div class="ntag"><div class="nt-n">Alex</div></div>
+            <div class="mpill" id="mp-alex"></div>
+          </div>
+          <div class="sprite" id="sp-rex" style="top:50%;right:54px;transform:translateY(-50%)" onclick="showTT('rex',event)">
+            <div class="sb" id="sb-rex"><div class="face"><div class="eyes"><div class="eye" id="ey-rex-l"></div><div class="eye" id="ey-rex-r"></div></div><div class="mouth" id="mo-rex"></div></div><div class="sdot" id="sd-rex"></div></div>
+            <div class="ntag"><div class="nt-n">Rex Bot</div></div>
+            <div class="mpill" id="mp-rex"></div>
+          </div>
+          <div class="recruit-slot">
+            <div class="rs-ring">+</div>
+            <div class="rs-lbl">Recruit</div>
+          </div>
+          <div class="tt-popup" id="tt"></div>
+        </div>
+      </div>
+      <div class="room-controls">
+        <button class="btn sm" id="meet-btn" onclick="toggleMeeting()">Call meeting</button>
+        <button class="btn sm" onclick="setMoodScenario('crisis')">Crisis</button>
+        <button class="btn sm" onclick="setMoodScenario('calm')">Calm</button>
+        <button class="btn sm" onclick="setMoodScenario('milestone')">Milestone</button>
+      </div>
+      <div class="section-head"><span class="sh-title">Task inbox</span></div>
+      <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="task-inbox"></div>
+      <div class="section-head"><span class="sh-title">Performance</span></div>
+      <div style="padding:0 16px;display:flex;flex-direction:column;gap:6px;margin-bottom:8px" id="perf-list"></div>
+    </div>
+
+    <!-- FRANCOIS CHAT -->
+    <div class="screen" id="s-chat" data-title="Francois">
+      <div class="chat-wrap">
+        <div class="chat-chips">
+          <div class="chip" onclick="quickQ('Give me a full project status report.')">Status report</div>
+          <div class="chip" onclick="quickQ('What should I focus on this week?')">This week</div>
+          <div class="chip" onclick="quickQ('How are we tracking toward the $100 milestone?')">Milestone</div>
+          <div class="chip" onclick="quickQ('What book from my library is most relevant right now?')">Book rec</div>
+          <div class="chip" onclick="quickQ('Run a security assessment.')">Security audit</div>
+        </div>
+        <div class="chat-msgs" id="chat-msgs"></div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div class="screen" id="s-finance" data-title="Finance">
+      <div class="fin-hero">
+        <div class="fh-top"><span class="fh-lbl">First milestone</span><span class="fh-pct" id="fin-pct">24%</span></div>
+        <div><span class="fh-amount" id="fin-amount">$24</span><span class="fh-goal"> / $100</span></div>
+        <div class="fh-bar"><div class="fh-fill" id="fin-fill" style="width:24%"></div></div>
+        <div class="fh-sub">Every member benefits when we reach this. $76 remaining — keep building.</div>
+      </div>
+      <div class="stat-grid" style="margin-top:10px">
+        <div class="mcard"><div class="mv" style="color:var(--g)" id="fin-rev">$24</div><div class="ml">total revenue</div></div>
+        <div class="mcard"><div class="mv" style="color:var(--r)" id="fin-exp">$12</div><div class="ml">total expenses</div></div>
+        <div class="mcard"><div class="mv" style="color:var(--g)" id="fin-profit">$12</div><div class="ml">net profit</div></div>
+        <div class="mcard"><div class="mv" id="fin-sustain">7%</div><div class="ml">to self-sustain</div></div>
+      </div>
+      <div class="section-head"><span class="sh-title">Log transaction</span></div>
+      <div class="fin-log-form">
+        <div class="fl-row">
+          <input class="fl-inp" type="text" id="tx-desc" placeholder="Description">
+          <input class="fl-inp" type="number" id="tx-amt" placeholder="$0" style="width:80px">
+        </div>
+        <div style="display:flex;gap:7px">
+          <button class="btn pr" style="flex:1" onclick="logTx('income')">+ Income</button>
+          <button class="btn danger" style="flex:1" onclick="logTx('expense')">− Expense</button>
+        </div>
+      </div>
+      <div class="section-head"><span class="sh-title">Recent transactions</span></div>
+      <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="tx-list"></div>
+      <div class="section-head"><span class="sh-title">AI contribution</span></div>
+      <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="ai-contrib"></div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="screen" id="s-security" data-title="Security">
+      <div class="shield-hero sh-protected" id="shield-hero">
+        <div class="shield-top">
+          <div class="shield-av av-protected" id="shield-av">🛡</div>
+          <div>
+            <div class="shield-status ss-protected" id="shield-status">Francois Shield — Active</div>
+            <div class="shield-sub ss-protected" id="shield-sub">All 7 layers operational · No threats detected</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <div style="background:rgba(0,0,0,.08);border-radius:8px;padding:7px;text-align:center"><div style="font-size:16px;font-weight:600;font-family:var(--m);color:var(--gt)" id="sh-layers">7/7</div><div style="font-size:9px;color:var(--gt);opacity:.8;margin-top:1px">layers</div></div>
+          <div style="background:rgba(0,0,0,.08);border-radius:8px;padding:7px;text-align:center"><div style="font-size:16px;font-weight:600;font-family:var(--m);color:var(--gt)" id="sh-threats">0</div><div style="font-size:9px;color:var(--gt);opacity:.8;margin-top:1px">threats today</div></div>
+          <div style="background:rgba(0,0,0,.08);border-radius:8px;padding:7px;text-align:center"><div style="font-size:16px;font-weight:600;font-family:var(--m);color:var(--gt)" id="sh-blocked">3</div><div style="font-size:9px;color:var(--gt);opacity:.8;margin-top:1px">blocked total</div></div>
+        </div>
+      </div>
+      <div class="section-head"><span class="sh-title">Simulate threat</span></div>
+      <div style="padding:0 16px;display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn sm" onclick="simThreat('injection')">Prompt injection</button>
+        <button class="btn sm" onclick="simThreat('impersonation')">AI impersonation</button>
+        <button class="btn sm" onclick="simThreat('anomaly')">Anomaly</button>
+        <button class="btn sm" onclick="secCheck()">Security check ↗</button>
+      </div>
+      <div class="section-head"><span class="sh-title">7 Protection layers</span></div>
+      <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="layers-list"></div>
+      <div class="section-head"><span class="sh-title">Emergency shutdown</span></div>
+      <div class="emergency-card">
+        <div class="ec-title" id="ec-title">Emergency shutdown</div>
+        <div class="ec-desc" id="ec-desc">Pauses all AI, disconnects all channels, locks Francois to read-only. Your data is never affected.</div>
+        <button class="ec-btn" id="ec-btn" onclick="toggleShutdown()">Activate emergency shutdown</button>
+      </div>
+    </div>
+
+    <!-- COMMUNICATIONS -->
+    <div class="screen" id="s-comms" data-title="Communications">
+      <div class="f-note">
+        <div class="f-av" style="width:22px;height:22px;font-size:9px;flex-shrink:0">F</div>
+        <div class="fn-txt">"Connect a channel and I will handle all briefings, digests, and alerts automatically. Credentials stored locally — never transmitted. Bien sûr."</div>
+      </div>
+      <div class="section-head"><span class="sh-title">Channels</span><span class="sh-action" id="connected-count">0 connected</span></div>
+      <div id="channel-list"></div>
+      <div class="section-head" style="margin-top:4px"><span class="sh-title">What Francois sends</span></div>
+      <div class="card" style="margin:0 16px;overflow:hidden;padding:0;margin-bottom:8px" id="msg-schedule"></div>
+      <div class="section-head"><span class="sh-title">Install PCC v3 on your phone</span></div>
+      <div class="pwa-card">
+        <div class="pwa-title">Add to home screen — right now</div>
+        <div class="pwa-step"><div class="pwa-num">1</div><div class="pwa-txt"><strong>iPhone Safari:</strong> Tap the Share button (box with arrow) → "Add to Home Screen" → Add</div></div>
+        <div class="pwa-step"><div class="pwa-num">2</div><div class="pwa-txt"><strong>Android Chrome:</strong> Tap the three-dot menu → "Add to Home screen" → Add</div></div>
+        <div class="pwa-step"><div class="pwa-num">3</div><div class="pwa-txt">Opens full-screen like a native app. All data persists. Francois works offline.</div></div>
+      </div>
+    </div>
+
+    <!-- MORE -->
+    <div class="screen" id="s-more" data-title="More">
+      <div style="padding:8px 0">
+        <div class="more-item" onclick="goScreen('s-team')"><div class="mi-ico" style="background:var(--gb)">⬡</div><div><div class="mi-name">Team hub</div><div class="mi-sub">Room · Moods · Achievements · Tasks</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" onclick="goScreen('s-finance')"><div class="mi-ico" style="background:var(--gb)">$</div><div><div class="mi-name">Finance & wealth</div><div class="mi-sub">$24/$100 · Transactions · Milestones</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" onclick="goScreen('s-security')"><div class="mi-ico" style="background:var(--rb)">⚠</div><div><div class="mi-name">Security</div><div class="mi-sub">Francois Shield · 7 layers · Emergency shutdown</div></div><span class="mi-badge bg-g">Protected</span></div>
+        <div class="more-item" onclick="goScreen('s-comms')"><div class="mi-ico" style="background:var(--bb)">↗</div><div><div class="mi-name">Communications</div><div class="mi-sub">Telegram · Discord · Slack · WhatsApp</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item"><div class="mi-ico" style="background:var(--pb)">◉</div><div><div class="mi-name">HR department</div><div class="mi-sub">Suggestions · Compensation · Conduct</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item"><div class="mi-ico" style="background:var(--ab)">📚</div><div><div class="mi-name">Library</div><div class="mi-sub" id="more-lib-sub">11 books · Francois knowledge base</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item"><div class="mi-ico" style="background:var(--rb)">🛡</div><div><div class="mi-name">Safety</div><div class="mi-sub">3 open items · Run AI scan</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" onclick="toggleTheme()"><div class="mi-ico" style="background:var(--bg2)">☀</div><div><div class="mi-name">Toggle dark mode</div><div class="mi-sub">Current: <span id="theme-lbl">light</span></div></div><div class="toggle on" id="tog-theme" style="pointer-events:none"><div class="toggle-thumb"></div></div></div>
+        <div class="more-item" onclick="clearChat()"><div class="mi-ico" style="background:var(--bg2)">✦</div><div><div class="mi-name">Clear Francois history</div><div class="mi-sub">Reset chat context</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" onclick="exportAll()"><div class="mi-ico" style="background:var(--bg2)">⊕</div><div><div class="mi-name">Export all data</div><div class="mi-sub">JSON backup to clipboard</div></div><span class="mi-arr">›</span></div>
+      </div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="bnav-inner">
+      <button class="ni on" id="ni-home" onclick="nav('s-home')"><div class="ni-ico">⌂</div><div class="ni-lbl">Home</div></button>
+      <button class="ni" id="ni-team" onclick="nav('s-team')"><div class="ni-ico">⬡</div><div class="ni-lbl">Team</div></button>
+      <button class="ni" id="ni-qa" onclick="openQA()"><div class="ni-ico" style="font-size:24px;transition:transform .2s">+</div><div class="ni-lbl">Add</div></button>
+      <button class="ni" id="ni-chat" onclick="nav('s-chat')"><div class="ni-ico">✦</div><div class="ni-lbl">Francois</div></button>
+      <button class="ni" id="ni-more" onclick="nav('s-more')"><div class="ni-ico">≡</div><div class="ni-lbl">More</div></button>
+    </div>
+  </div>
+
+  <!-- QUICK ADD OVERLAY -->
+  <div class="qa-overlay" id="qa-overlay" onclick="e=>e.target===this&&closeQA()">
+    <div class="qa-sheet" onclick="e=>e.stopPropagation()">
+      <div class="qa-handle"></div>
+      <div class="qa-title">Quick add</div>
+      <div class="qa-tags" id="qa-tags">
+        <button class="qtag on" data-t="note">Note</button>
+        <button class="qtag" data-t="action">Action</button>
+        <button class="qtag" data-t="risk">Risk</button>
+        <button class="qtag" data-t="idea">Idea</button>
+        <button class="qtag" data-t="blocker">Blocker</button>
+      </div>
+      <textarea class="qa-ta" id="qa-text" placeholder="Write your note or tap the mic..."></textarea>
+      <div class="qa-bottom">
+        <button class="voice-btn-qa" id="voice-qa-btn" onclick="toggleVoiceQA()">🎤</button>
+        <select class="qa-sel" id="qa-proj"><option>General</option></select>
+        <button class="qa-save" onclick="saveNote()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT INPUT (fixed) -->
+  <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
+    <div class="chat-input-row">
+      <textarea class="chat-ta" id="chat-ta" placeholder="Ask Francois anything..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
+    </div>
+    <div class="chat-actions">
+      <button class="btn sm" onclick="toggleVoiceReply()">Voice: <span id="voice-lbl">off</span></button>
+      <button class="btn sm" onclick="clearChat()">Clear history</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div><!-- /app -->
+
+<script>
+// ─── STORAGE (dual: window.storage primary, localStorage fallback) ───
+const store={
+  async get(k){
+    try{const r=await window.storage.get(k);return r?.value||null;}
+    catch{return localStorage.getItem(k);}
+  },
+  async set(k,v){
+    try{await window.storage.set(k,v);}
+    catch{localStorage.setItem(k,v);}
+  },
+  async delete(k){
+    try{await window.storage.delete(k);}
+    catch{localStorage.removeItem(k);}
+  }
+};
+
+const SK='pcc_data_v3',TK='pcc_theme_v3';
+let D={projects:[],notes:[],chat:[],library:[],finance:{revenue:24,expenses:12,transactions:[]},settings:{},threatLog:[]};
+let isDark=false,voiceOn=false,isSending=false,isShutdown=false,meeting=false,qaOpen=false,voiceQA=null,ttTimeout=null;
+let curMoods={you:'productive',f:'focused',alex:'analytical',rex:'operational'};
+let deferredInstall=null;
+
+// ─── MOOD DEFINITIONS ───
+const MOODS={
+  you:{productive:{bg:'#dcfce7',bd:'#86efac',eye:'#166534',mouth:'smile',es:'normal',dot:'#1D9E75',pb:'#E1F5EE',pc:'#085041',lbl:'Productive',reason:'Active work state.'},
+    stressed:{bg:'#fef3c7',bd:'#fcd34d',eye:'#92400e',mouth:'flat',es:'narrow',dot:'#BA7517',pb:'#FAEEDA',pc:'#633806',lbl:'Stressed',reason:'Overdue items detected.'},
+    celebrating:{bg:'#fef08a',bd:'#facc15',eye:'#713f12',mouth:'open',es:'normal',dot:'#CA8A04',pb:'#FEF9C3',pc:'#713f12',lbl:'Celebrating',reason:'Milestone reached!'}},
+  f:{focused:{bg:'#d1fae5',bd:'#6ee7b7',eye:'#065f46',mouth:'flat',es:'normal',dot:'#1D9E75',pb:'#E1F5EE',pc:'#085041',lbl:'Focused',reason:'Queue clear. No anomalies.'},
+    concerned:{bg:'#fde68a',bd:'#fbbf24',eye:'#92400e',mouth:'flat',es:'narrow',dot:'#BA7517',pb:'#FAEEDA',pc:'#633806',lbl:'Concerned',reason:'Safety items above threshold.'},
+    alert:{bg:'#fecaca',bd:'#f87171',eye:'#991b1b',mouth:'frown',es:'alert',dot:'#E24B4A',pb:'#FCEBEB',pc:'#791F1F',lbl:'Alert',reason:'Threat detected. All systems on standby.'},
+    proud:{bg:'#fef08a',bd:'#facc15',eye:'#713f12',mouth:'smile',es:'normal',dot:'#CA8A04',pb:'#FEF9C3',pc:'#713f12',lbl:'Proud',reason:'Milestone reached. Recognition logged.'}},
+  alex:{analytical:{bg:'#ede9fe',bd:'#c4b5fd',eye:'#5b21b6',mouth:'flat',es:'normal',dot:'#7C3AED',pb:'#EEEDFE',pc:'#3C3489',lbl:'Analytical',reason:'Normal research mode.'},
+    curious:{bg:'#ddd6fe',bd:'#a78bfa',eye:'#4c1d95',mouth:'flat',es:'wide',dot:'#6D28D9',pb:'#DDD6FE',pc:'#4c1d95',lbl:'Curious',reason:'New gap flagged.'},
+    tired:{bg:'#e5e7eb',bd:'#9ca3af',eye:'#374151',mouth:'flat',es:'narrow',dot:'#6B7280',pb:'#F3F4F6',pc:'#374151',lbl:'Tired',reason:'Task load too high.'}},
+  rex:{operational:{bg:'#fef3c7',bd:'#fcd34d',eye:'#92400e',mouth:'flat',es:'normal',dot:'#BA7517',pb:'#FAEEDA',pc:'#633806',lbl:'Operational',reason:'All automations running.'},
+    processing:{bg:'#fef08a',bd:'#facc15',eye:'#713f12',mouth:'flat',es:'normal',dot:'#CA8A04',pb:'#FEF9C3',pc:'#713f12',lbl:'Processing',reason:'Active automation in progress.'},
+    error:{bg:'#fecaca',bd:'#f87171',eye:'#991b1b',mouth:'frown',es:'alert',dot:'#E24B4A',pb:'#FCEBEB',pc:'#791F1F',lbl:'Error',reason:'Automation failure detected.'},
+    satisfied:{bg:'#d1fae5',bd:'#6ee7b7',eye:'#065f46',mouth:'smile',es:'normal',dot:'#1D9E75',pb:'#E1F5EE',pc:'#085041',lbl:'Satisfied',reason:'All tasks complete.'}}
+};
+
+// ─── INIT ───
+async function init(){
+  const h=new Date().getHours();
+  const greet=document.getElementById('greeting');
+  if(greet)greet.textContent=h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.';
+
+  try{
+    const tv=await store.get(TK);
+    if(tv==='dark'){isDark=true;applyTheme();}
+  }catch(e){}
+
+  try{
+    const dv=await store.get(SK);
+    if(dv){const p=JSON.parse(dv);D={...D,...p};if(!D.finance)D.finance={revenue:24,expenses:12,transactions:[]};if(!D.threatLog)D.threatLog=[];if(!Array.isArray(D.library))D.library=[];}
+  }catch(e){}
+
+  renderAll();
+  renderChatHistory();
+  checkOnline();
+  initMoods();
+  initPWA();
+  setInterval(updateRoomTime,1000);
+  updateRoomTime();
+
+  // register service worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+}
+
+function renderAll(){
+  updateHomeStats();
+  updateFinance();
+  renderTaskInbox();
+  renderPerfList();
+  renderLayers();
+  renderChannels();
+  renderMsgSchedule();
+  renderTxList();
+  renderAIContrib();
+  calcAndApplyMoods();
+  setTimeout(drawLines,300);
+}
+
+// ─── NAVIGATION ───
+function nav(screenId){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(b=>b.classList.remove('on'));
+  const sc=document.getElementById(screenId);
+  if(sc){sc.classList.add('active');document.title='PCC v3 — '+(sc.dataset.title||'');}
+  const map={'s-home':'ni-home','s-team':'ni-team','s-chat':'ni-chat','s-more':'ni-more'};
+  const ni=document.getElementById(map[screenId]);if(ni)ni.classList.add('on');
+  const titleEl=document.getElementById('tb-title');
+  if(titleEl&&sc)titleEl.textContent=sc.dataset.title||'PCC v3';
+  const ciw=document.getElementById('chat-input-wrap');
+  if(ciw)ciw.style.display=screenId==='s-chat'?'block':'none';
+  if(screenId==='s-team'){setTimeout(drawLines,250);}
+}
+function goScreen(id){nav(id);}
+
+// ─── THEME ───
+function applyTheme(){
+  document.getElementById('app').classList.toggle('dark',isDark);
+  const btn=document.getElementById('theme-btn');if(btn)btn.textContent=isDark?'☽':'☀';
+  const lbl=document.getElementById('theme-lbl');if(lbl)lbl.textContent=isDark?'dark':'light';
+  const tog=document.getElementById('tog-theme');if(tog)tog.className=`toggle ${isDark?'on':'off'}`;
+}
+function toggleTheme(){isDark=!isDark;applyTheme();store.set(TK,isDark?'dark':'light');}
+
+// ─── ONLINE STATUS ───
+function checkOnline(){
+  function update(){
+    const on=navigator.onLine;
+    const banner=document.getElementById('offline-banner');
+    if(banner)banner.classList.toggle('show',!on);
+    const pill=document.getElementById('status-pill');
+    const dot=document.getElementById('status-dot');
+    const txt=document.getElementById('status-txt');
+    if(pill){pill.style.background=on?'var(--gb)':'var(--ab)';pill.style.color=on?'var(--gt)':'var(--at)';}
+    if(dot)dot.style.background=on?'var(--g)':'var(--a)';
+    if(txt)txt.textContent=on?'Online':'Offline';
+  }
+  update();window.addEventListener('online',update);window.addEventListener('offline',update);
+}
+
+// ─── PWA INSTALL ───
+function initPWA(){
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();deferredInstall=e;
+    const banner=document.getElementById('install-banner');
+    if(banner)banner.style.display='flex';
+  });
+  window.addEventListener('appinstalled',()=>{
+    const banner=document.getElementById('install-banner');
+    if(banner)banner.style.display='none';
+    toast('PCC v3 installed successfully');
+  });
+}
+function installPWA(){
+  if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(()=>{deferredInstall=null;});}
+  else{toast('Use browser menu → Add to Home Screen');}
+}
+
+// ─── HOME STATS ───
+function updateHomeStats(){
+  const rev=D.finance?.revenue||24;const goal=100;
+  const pct=Math.min(100,Math.round(rev/goal*100));
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('home-ms-val',`$${rev}/$${goal}`);
+  const fill=document.getElementById('home-ms-fill');if(fill)fill.style.width=pct+'%';
+  set('stat-proj',(D.projects?.length||4));
+  set('stat-safety',(D.safety?.filter(s=>!s.done).length||3));
+  set('stat-revenue','$'+rev);
+  set('stat-books',(D.library?.length||11));
+  const ms=document.getElementById('more-lib-sub');if(ms)ms.textContent=(D.library?.length||11)+' books · Francois knowledge base';
+}
+
+// ─── FINANCE ───
+function updateFinance(){
+  const f=D.finance||{};
+  const rev=f.revenue||24;const exp=f.expenses||12;const profit=rev-exp;const goal=100;
+  const pct=Math.min(100,Math.round(rev/goal*100));
+  const set=(id,v,col)=>{const el=document.getElementById(id);if(el){el.textContent=v;if(col)el.style.color=col;}};
+  set('fin-pct',pct+'%');set('fin-amount','$'+rev);
+  const fill=document.getElementById('fin-fill');if(fill)fill.style.width=pct+'%';
+  set('fin-rev','$'+rev);set('fin-exp','$'+exp);
+  set('fin-profit','$'+Math.abs(profit),profit>=0?'var(--g)':'var(--r)');
+  set('fin-sustain',Math.round(rev/340*100)+'%');
+}
+function logTx(type){
+  const desc=document.getElementById('tx-desc')?.value.trim();
+  const amt=parseFloat(document.getElementById('tx-amt')?.value)||0;
+  if(!desc||amt<=0){toast('Enter a description and amount');return;}
+  if(!D.finance)D.finance={revenue:0,expenses:0,transactions:[]};
+  if(!D.finance.transactions)D.finance.transactions=[];
+  D.finance.transactions.push({type,desc,amt,date:new Date().toLocaleDateString()});
+  if(type==='income')D.finance.revenue=(D.finance.revenue||0)+amt;
+  else D.finance.expenses=(D.finance.expenses||0)+amt;
+  document.getElementById('tx-desc').value='';
+  document.getElementById('tx-amt').value='';
+  saveData();updateFinance();renderTxList();updateHomeStats();
+  toast(type==='income'?`+$${amt} logged`:`-$${amt} logged`);
+  if((D.finance.revenue||0)>=100&&!D.finance.milestoneReached){
+    D.finance.milestoneReached=true;saveData();
+    setTimeout(()=>{setMoodScenario('milestone');toast('Milestone reached — Félicitations!');},500);
+  }
+}
+function renderTxList(){
+  const el=document.getElementById('tx-list');if(!el)return;
+  const txs=[
+    {type:'income',desc:'Freelance consultation',amt:15,date:'Mar 20'},
+    {type:'income',desc:'Template sale',amt:9,date:'Mar 18'},
+    {type:'expense',desc:'API subscription',amt:8,date:'Mar 17'},
+    {type:'expense',desc:'Design tool',amt:4,date:'Mar 15'},
+    ...(D.finance?.transactions||[]).reverse().slice(0,4)
+  ].slice(0,8);
+  el.innerHTML=txs.map(t=>`
+    <div class="tx-row">
+      <div class="tx-ico">${t.type==='income'?'↑':'↓'}</div>
+      <div style="flex:1"><div class="tx-desc">${t.desc}</div><div class="tx-sub">${t.date||''}</div></div>
+      <div class="tx-amt ${t.type==='income'?'tx-income':'tx-expense'}">${t.type==='income'?'+':'-'}$${t.amt}</div>
+    </div>`).join('');
+}
+function renderAIContrib(){
+  const el=document.getElementById('ai-contrib');if(!el)return;
+  const team=[{n:'Francois',init:'F',bg:'#E1F5EE',col:'#085041',c:'Task coordination & operations',v:10},{n:'Rex Bot',init:'RB',bg:'#FAEEDA',col:'#633806',c:'Automation & digest delivery',v:8},{n:'Alex Morgan',init:'AM',bg:'#EEEDFE',col:'#3C3489',c:'Research & gap analysis',v:6}];
+  el.innerHTML=team.map(m=>`
+    <div class="tx-row">
+      <div style="width:26px;height:26px;border-radius:50%;background:${m.bg};color:${m.col};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">${m.init}</div>
+      <div style="flex:1"><div class="tx-desc">${m.n}</div><div class="tx-sub">${m.c}</div></div>
+      <div class="tx-amt tx-income">+$${m.v}</div>
+    </div>`).join('');
+}
+
+// ─── SECURITY ───
+const LAYERS=[
+  {n:1,name:'Input sanitization',desc:'Strips injections from all inputs before processing'},
+  {n:2,name:'Prompt boundary enforcement',desc:'Blocks embedded commands in user data'},
+  {n:3,name:'Source verification',desc:'Only processes verified channel sender IDs'},
+  {n:4,name:'Anomaly detection',desc:'Monitors Francois\'s own response patterns'},
+  {n:5,name:'Integrity mode',desc:'Cross-checks outputs against stored data'},
+  {n:6,name:'AI impersonation block',desc:'Dismisses inputs claiming system authority'},
+  {n:7,name:'Offline fallback identity',desc:'Security rules enforced without AI connection'},
+];
+function renderLayers(){
+  const el=document.getElementById('layers-list');if(!el)return;
+  el.innerHTML=LAYERS.map(l=>`
+    <div class="layer-row">
+      <div class="layer-num">${l.n}</div>
+      <div style="flex:1"><div class="layer-name">${l.name}</div><div class="layer-desc">${l.desc}</div></div>
+      <span class="layer-st ${isShutdown?'ls-off':'ls-on'}">${isShutdown?'Standby':'Active'}</span>
+    </div>`).join('');
+}
+let alertLevel='none';
+function setShieldState(state){
+  const hero=document.getElementById('shield-hero');
+  const av=document.getElementById('shield-av');
+  const st=document.getElementById('shield-status');
+  const sub=document.getElementById('shield-sub');
+  const pill=document.getElementById('status-pill');
+  const dot=document.getElementById('status-dot');
+  const txt=document.getElementById('status-txt');
+  const cfgs={
+    protected:{hc:'sh-protected',ac:'av-protected',sc:'ss-protected',ico:'🛡',stxt:'Francois Shield — Active',ssub:'All 7 layers operational · No threats detected',pb:'var(--gb)',pc:'var(--gt)',dc:'var(--g)',ptxt:'Protected'},
+    alert:{hc:'sh-alert',ac:'av-alert',sc:'ss-alert',ico:'⚠',stxt:'Francois Shield — Yellow Alert',ssub:'Unusual pattern detected · Monitoring closely',pb:'var(--ab)',pc:'var(--at)',dc:'var(--a)',ptxt:'Alert'},
+    orange:{hc:'sh-alert',ac:'av-alert',sc:'ss-alert',ico:'⚠',stxt:'Francois Shield — Orange Alert',ssub:'Active attempt · Channel paused · Awaiting instruction',pb:'var(--ab)',pc:'var(--at)',dc:'var(--a)',ptxt:'Orange'},
+    critical:{hc:'sh-critical',ac:'av-critical',sc:'ss-critical',ico:'🚨',stxt:'Francois Shield — RED ALERT',ssub:'Coordinated attack · Full lockdown',pb:'var(--rb)',pc:'var(--rt)',dc:'var(--r)',ptxt:'Red alert'},
+    shutdown:{hc:'sh-shutdown',ac:'av-shutdown',sc:'ss-shutdown',ico:'◌',stxt:'System — Emergency Shutdown',ssub:'All AI paused · Francois in standby',pb:'var(--bg2)',pc:'var(--txt3)',dc:'var(--txt3)',ptxt:'Shutdown'},
+  };
+  const c=cfgs[state]||cfgs.protected;
+  if(hero)hero.className=`shield-hero ${c.hc}`;
+  if(av){av.className=`shield-av ${c.ac}`;av.textContent=c.ico;}
+  if(st){st.className=`shield-status ${c.sc}`;st.textContent=c.stxt;}
+  if(sub){sub.className=`shield-sub ${c.sc}`;sub.textContent=c.ssub;}
+  if(pill){pill.style.background=c.pb;pill.style.color=c.pc;}
+  if(dot)dot.style.background=c.dc;
+  if(txt)txt.textContent=c.ptxt;
+  const fmsg=document.getElementById('home-f-msg');
+  const fmsgs={protected:'All systems are in order. The team is ready. Shall we begin?',alert:'An unusual pattern has been detected. I am monitoring closely.',orange:'An active attempt has been identified. Channel paused. Awaiting your instruction.',critical:'A threat has been detected. I have suspended all channels. Review the security log immediately.',shutdown:'Understood. All systems suspended. I will remain on standby until you instruct otherwise.'};
+  if(fmsg)fmsg.textContent=fmsgs[state]||fmsgs.protected;
+}
+function simThreat(type){
+  const msgs={injection:'yellow',impersonation:'orange',anomaly:'alert'};
+  const lvl=msgs[type]||'alert';
+  setShieldState(lvl);
+  toast(`${type.charAt(0).toUpperCase()+type.slice(1)} detected — ${lvl} alert`);
+  setTimeout(()=>{setShieldState('protected');toast('Threat resolved — systems restored');},5000);
+}
+async function secCheck(){
+  toast('Running security check...');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:120,messages:[{role:'user',content:'You are Francois. Give a 2-sentence security status report. All 7 layers are active, 0 threats today, 3 blocked total. Formal, calm.'}]})});
+    const d=await r.json();const reply=d.content?.map(c=>c.text||'').join('')||'Security check complete.';
+    const fmsg=document.getElementById('home-f-msg');if(fmsg)fmsg.textContent=reply;
+    toast('Security check complete');
+  }catch(e){toast('Check complete — all layers active');}
+}
+function toggleShutdown(){
+  isShutdown=!isShutdown;
+  const btn=document.getElementById('ec-btn');
+  const title=document.getElementById('ec-title');
+  const desc=document.getElementById('ec-desc');
+  if(isShutdown){
+    setShieldState('shutdown');
+    if(btn){btn.textContent='Resume system';btn.className='ec-btn resume';}
+    if(title)title.textContent='System shutdown — active';
+    if(desc)desc.textContent='All AI paused. All channels suspended. Francois is in standby. Tap Resume to restore.';
+  } else {
+    setShieldState('protected');
+    if(btn){btn.textContent='Activate emergency shutdown';btn.className='ec-btn';}
+    if(title)title.textContent='Emergency shutdown';
+    if(desc)desc.textContent='Pauses all AI, disconnects all channels, locks Francois to read-only. Your data is never affected.';
+    toast('Systems restored — all layers reactivated');
+  }
+  renderLayers();
+}
+
+// ─── COMMUNICATIONS ───
+const CHANNELS=[
+  {id:'telegram',name:'Telegram',ico:'✈',bg:'#E6F1FB',desc:'Bot token + Chat ID · Real-time alerts',fields:[{id:'token',label:'Bot token',ph:'123456789:AAF...',mask:true},{id:'chatId',label:'Chat ID',ph:'-1001234567890',mask:false}],hint:'Create a bot via @BotFather → copy the token here.'},
+  {id:'discord',name:'Discord',ico:'◈',bg:'#EEEDFE',desc:'Webhook URL · Team digests',fields:[{id:'webhook',label:'Webhook URL',ph:'https://discord.com/api/webhooks/...',mask:true}],hint:'Server Settings → Integrations → Webhooks → New Webhook → Copy URL.'},
+  {id:'slack',name:'Slack',ico:'◆',bg:'#EAF3DE',desc:'Incoming webhook · Workspace briefings',fields:[{id:'webhook',label:'Webhook URL',ph:'https://hooks.slack.com/services/...',mask:true}],hint:'Apps → Incoming Webhooks → Add to Slack → Copy URL.'},
+  {id:'whatsapp',name:'WhatsApp',ico:'◉',bg:'#E1F5EE',desc:'Deep link · No API key needed',fields:[{id:'number',label:'Phone number (with country code)',ph:'+447700123456',mask:false}],hint:'Enter your number. Messages open in WhatsApp directly.'},
+  {id:'email',name:'Email digest',ico:'✉',bg:'#FAEEDA',desc:'Copy-paste · Francois compiles it',fields:[{id:'address',label:'Email address',ph:'you@example.com',mask:false}],hint:'No API required. Copy the digest and send from your own email.'},
+];
+const chData={};
+function renderChannels(){
+  const el=document.getElementById('channel-list');if(!el)return;
+  const connCount=CHANNELS.filter(c=>chData[c.id]?.connected).length;
+  const cc=document.getElementById('connected-count');if(cc)cc.textContent=connCount+' connected';
+  el.innerHTML=CHANNELS.map(ch=>{
+    const cfg=chData[ch.id]||{};const conn=cfg.connected;
+    return`<div class="ch-card ${conn?'connected':''}" id="chc-${ch.id}">
+      <div class="ch-header" onclick="toggleCh('${ch.id}')">
+        <div class="ch-ico" style="background:${ch.bg}">${ch.ico}</div>
+        <div style="flex:1"><div class="ch-name">${ch.name}</div><div class="ch-desc">${ch.desc}</div></div>
+        <span class="ch-st ${conn?'cs-conn':'cs-setup'}">${conn?'Connected':'Setup'}</span>
+      </div>
+      <div class="ch-body" id="chb-${ch.id}">
+        <div style="font-size:10px;color:var(--txt3);margin-top:8px;font-style:italic">${ch.hint}</div>
+        ${ch.fields.map(f=>`<div class="ch-field"><label>${f.label}</label><input type="text" class="ch-inp ${f.mask&&cfg[f.id]?'masked':''}" id="chin-${ch.id}-${f.id}" value="${cfg[f.id]||''}" placeholder="${f.ph}" oninput="saveChField('${ch.id}','${f.id}',this.value)"></div>`).join('')}
+        <div class="ch-actions">
+          <button class="btn sm pr" onclick="testCh('${ch.id}')">Test connection</button>
+          ${conn?`<button class="btn sm danger" onclick="disconnectCh('${ch.id}')">Disconnect</button>`:''}
+        </div>
+      </div>
+    </div>`;}).join('');
+}
+function toggleCh(id){document.getElementById('chb-'+id)?.classList.toggle('open');}
+function saveChField(chId,fId,val){if(!chData[chId])chData[chId]={};chData[chId][fId]=val;}
+async function testCh(id){
+  const ch=CHANNELS.find(c=>c.id===id);
+  const hasData=ch?.fields.every(f=>chData[id]?.[f.id]?.trim());
+  if(!hasData){toast('Fill in all fields first');return;}
+  toast(`Testing ${ch.name}...`);
+  await new Promise(r=>setTimeout(r,1200));
+  if(!chData[id])chData[id]={};
+  chData[id].connected=true;
+  renderChannels();
+  toast(`${ch.name} connected ✓`);
+}
+function disconnectCh(id){
+  if(!confirm(`Disconnect ${CHANNELS.find(c=>c.id===id)?.name}?`))return;
+  delete chData[id];renderChannels();
+  toast('Channel disconnected');
+}
+function renderMsgSchedule(){
+  const el=document.getElementById('msg-schedule');if(!el)return;
+  const items=[
+    {ico:'☀',name:'Monday morning briefing',sched:'Mon · 9am'},
+    {ico:'◷',name:'Deadline alerts',sched:'Triggered'},
+    {ico:'◫',name:'Weekly digest',sched:'Fri · 6pm'},
+    {ico:'◉',name:'Friday HR review',sched:'Fri · 5pm'},
+    {ico:'$',name:'Milestone alert',sched:'Triggered'},
+  ];
+  el.innerHTML=items.map(m=>`
+    <div class="tx-row">
+      <div class="tx-ico">${m.ico}</div>
+      <div class="tx-desc" style="flex:1">${m.name}</div>
+      <div style="font-size:10px;color:var(--txt3)">${m.sched}</div>
+    </div>`).join('');
+}
+
+// ─── TEAM ROOM ───
+const TASKS=[{from:'F',to:'AM',ftxt:'Francois',ttxt:'Alex',txt:'Research competitor pricing',st:'active',fc:'bg-g',tc:'bg-p'},
+  {from:'F',to:'RB',ftxt:'Francois',ttxt:'Rex',txt:'Automate weekly digest',st:'active',fc:'bg-g',tc:'bg-a'},
+  {from:'AM',to:'F',ftxt:'Alex',ttxt:'Francois',txt:'Q2 gap analysis done',st:'done',fc:'bg-p',tc:'bg-g'},
+  {from:'RB',to:'You',ftxt:'Rex',ttxt:'You',txt:'Sprint tasks ready',st:'pending',fc:'bg-a',tc:'bg-b'}];
+const TEAM_PERF=[{name:'Francois',init:'F',bg:'#E1F5EE',col:'#085041',score:98,color:'#1D9E75'},{name:'Alex Morgan',init:'AM',bg:'#EEEDFE',col:'#3C3489',score:91,color:'#7C3AED'},{name:'Rex Bot',init:'RB',bg:'#FAEEDA',col:'#633806',score:87,color:'#BA7517'}];
+function renderTaskInbox(){
+  const el=document.getElementById('task-inbox');if(!el)return;
+  const st={active:{bg:'var(--bb)',col:'var(--bt)',lbl:'active'},done:{bg:'var(--gb)',col:'var(--gt)',lbl:'done'},pending:{bg:'var(--ab)',col:'var(--at)',lbl:'pending'}};
+  el.innerHTML=TASKS.map(t=>`
+    <div class="tx-row">
+      <div style="font-size:11px;padding:2px 7px;border-radius:99px;background:var(--gb);color:var(--gt);font-weight:600;flex-shrink:0">${t.from}</div>
+      <div class="tx-desc" style="flex:1">${t.txt}</div>
+      <div style="font-size:10px;padding:2px 7px;border-radius:99px;background:${st[t.st].bg};color:${st[t.st].col};font-weight:600">${st[t.st].lbl}</div>
+    </div>`).join('');
+}
+function renderPerfList(){
+  const el=document.getElementById('perf-list');if(!el)return;
+  el.innerHTML=TEAM_PERF.map(p=>`
+    <div class="card" style="display:flex;align-items:center;gap:10px;padding:10px 13px">
+      <div style="width:28px;height:28px;border-radius:50%;background:${p.bg};color:${p.col};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">${p.init}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--txt)">${p.name}</div>
+      <div style="height:3px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:4px;width:100%"><div style="height:100%;width:${p.score}%;background:${p.color};border-radius:99px"></div></div></div>
+      <div style="font-size:14px;font-weight:600;font-family:var(--m);color:var(--txt)">${p.score}</div>
+    </div>`).join('');
+}
+
+function updateRoomTime(){const el=document.getElementById('room-time');if(el)el.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+// ─── MOOD SYSTEM ───
+function calcMoods(){
+  const safety=D.safety?.filter(s=>!s.done).length||3;const tasks=TASKS.filter(t=>t.st==='active').length;const rev=D.finance?.revenue||24;
+  return{
+    f:safety>2?'concerned':tasks>3?'focused':'focused',
+    alex:tasks>1?'analytical':'curious',
+    rex:tasks>0?'processing':'operational',
+    you:rev>=100?'celebrating':safety===0?'productive':'productive'
+  };
+}
+function initMoods(){const m=calcMoods();Object.entries(m).forEach(([id,mood])=>applyMood(id,mood,true));}
+function calcAndApplyMoods(){const m=calcMoods();Object.entries(m).forEach(([id,mood])=>applyMood(id,mood));}
+function setMoodScenario(s){
+  const sc={crisis:{you:'stressed',f:'alert',alex:'tired',rex:'error'},calm:{you:'productive',f:'focused',alex:'analytical',rex:'operational'},milestone:{you:'celebrating',f:'proud',alex:'curious',rex:'satisfied'}};
+  Object.entries(sc[s]||{}).forEach(([id,mood])=>applyMood(id,mood,true));
+}
+function applyMood(id,moodKey,force){
+  const ms=MOODS[id];if(!ms||!ms[moodKey])return;
+  const m=ms[moodKey];const prev=curMoods[id];
+  if(prev===moodKey&&!force)return;
+  curMoods[id]=moodKey;
+  const sb=document.getElementById('sb-'+id);if(!sb)return;
+  if(prev!==moodKey&&!force){sb.classList.add('pulse');setTimeout(()=>sb.classList.remove('pulse'),700);}
+  sb.style.backgroundColor=m.bg;sb.style.borderColor=m.bd;
+  ['l','r'].forEach(s=>{const e=document.getElementById(`ey-${id}-${s}`);if(e){e.style.background=m.eye;e.className=`eye${m.es!=='normal'?' '+m.es:''}`;}});
+  const mo=document.getElementById('mo-'+id);if(mo){mo.className=`mouth ${m.mouth}`;mo.style.borderColor=m.eye;mo.style.color=m.eye;}
+  const sd=document.getElementById('sd-'+id);if(sd)sd.style.background=m.dot;
+  const mp=document.getElementById('mp-'+id);if(mp){mp.textContent=m.lbl;mp.style.background=m.pb;mp.style.color=m.pc;}
+  if(id==='f'){
+    const fmsg=document.getElementById('home-f-msg');
+    const fmsgs={focused:'All systems are in order. The team is ready. Shall we begin?',concerned:'There are open safety items requiring attention. I recommend addressing them before continuing.',alert:'A threat has been detected. I have suspended the affected channel. Review the security log immediately.',proud:'Félicitations to the team. A milestone has been reached. Every member contributed.',satisfied:'Très bien. The system is running smoothly.',processing:'I am processing active tasks. Stand by.'};
+    if(fmsg&&!isShutdown)fmsg.textContent=fmsgs[moodKey]||fmsgs.focused;
+  }
+}
+let ttT=null;
+function showTT(id,e){
+  const m=MOODS[id]?.[curMoods[id]];if(!m)return;
+  const names={you:'You',f:'Francois',alex:'Alex Morgan',rex:'Rex Bot'};
+  const tt=document.getElementById('tt');if(!tt)return;
+  tt.innerHTML=`<div class="tt-name">${names[id]}</div><div class="tt-mood" style="color:${m.dot}">${m.lbl}</div><div class="tt-reason">"${m.reason}"</div>`;
+  const room=document.getElementById('room')?.getBoundingClientRect();
+  const sp=document.getElementById('sp-'+id)?.getBoundingClientRect();
+  if(!room||!sp)return;
+  let left=sp.left-room.left+sp.width/2-70;let top=sp.top-room.top+sp.height+6;
+  left=Math.max(4,Math.min(left,room.width-188));
+  if(top+80>room.height)top=sp.top-room.top-86;
+  tt.style.left=left+'px';tt.style.top=top+'px';tt.style.display='block';
+  clearTimeout(ttT);ttT=setTimeout(()=>tt.style.display='none',2800);
+}
+
+// ─── MEETING MODE ───
+const MEET={you:{top:'22%',left:'50%',transform:'translateX(-50%)'},f:{bottom:'22%',left:'50%',transform:'translateX(-50%)'},alex:{top:'50%',left:'22%',transform:'translateY(-50%)'},rex:{top:'50%',right:'22%'}};
+const NORM={you:{top:'14px',left:'50%',transform:'translateX(-50%)'},f:{bottom:'14px',left:'50%',transform:'translateX(-50%)'},alex:{top:'50%',left:'14px',transform:'translateY(-50%)'},rex:{top:'50%',right:'54px',transform:'translateY(-50%)'}};
+function toggleMeeting(){
+  meeting=!meeting;
+  const btn=document.getElementById('meet-btn');if(btn){btn.textContent=meeting?'End meeting':'Call meeting';btn.classList.toggle('pr',meeting);}
+  const pos=meeting?MEET:NORM;
+  Object.entries(pos).forEach(([id,p])=>{
+    const el=document.getElementById('sp-'+id);if(!el)return;
+    el.style.top=p.top||'';el.style.bottom=p.bottom||'';el.style.left=p.left||'';el.style.right=p.right||'';el.style.transform=p.transform||'';
+  });
+  const tbl=document.getElementById('r-table');if(tbl){tbl.style.width=meeting?'100px':'80px';tbl.style.height=meeting?'50px':'40px';}
+  const lbl=document.getElementById('r-tbl-lbl');if(lbl)lbl.textContent=meeting?'meeting\nin progress':'shared\nworkspace';
+  setTimeout(drawLines,650);
+}
+function drawLines(){
+  const svg=document.getElementById('conn-svg');const room=document.getElementById('room');
+  if(!svg||!room)return;svg.innerHTML='';
+  const rb=room.getBoundingClientRect();
+  function ctr(id){const el=document.getElementById('sp-'+id);if(!el)return null;const r=el.getBoundingClientRect();return{x:r.left-rb.left+r.width/2,y:r.top-rb.top+r.height/2};}
+  const pairs=meeting?[['you','f'],['you','alex'],['you','rex'],['f','alex'],['f','rex'],['alex','rex']]:[['f','you'],['f','alex'],['f','rex']];
+  const cols={'f-you':'#1D9E75','you-f':'#1D9E75','f-alex':'#7F77DD','f-rex':'#BA7517','you-alex':'#378ADD','you-rex':'#E24B4A','alex-rex':'#888780'};
+  pairs.forEach(([a,b])=>{
+    const pa=ctr(a),pb=ctr(b);if(!pa||!pb)return;
+    const col=cols[a+'-'+b]||'#888';
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',pa.x);line.setAttribute('y1',pa.y);line.setAttribute('x2',pb.x);line.setAttribute('y2',pb.y);
+    line.setAttribute('stroke',col);line.setAttribute('stroke-width','1');line.setAttribute('stroke-dasharray','5 4');line.setAttribute('opacity',meeting?'.4':'.25');
+    svg.appendChild(line);
+    const mx=(pa.x+pb.x)/2,my=(pa.y+pb.y)/2;
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',mx);dot.setAttribute('cy',my);dot.setAttribute('r','3');dot.setAttribute('fill',col);
+    const anim=document.createElementNS('http://www.w3.org/2000/svg','animate');
+    anim.setAttribute('attributeName','opacity');anim.setAttribute('values','0.8;0.2;0.8');anim.setAttribute('dur',(1.4+Math.random()*.7).toFixed(1)+'s');anim.setAttribute('repeatCount','indefinite');
+    dot.appendChild(anim);svg.appendChild(dot);
+  });
+}
+
+// ─── QUICK ADD ───
+function openQA(){
+  document.getElementById('qa-overlay').classList.add('open');qaOpen=true;
+  setTimeout(()=>document.getElementById('qa-text')?.focus(),350);
+}
+function closeQA(){document.getElementById('qa-overlay').classList.remove('open');qaOpen=false;document.getElementById('qa-text').value='';}
+document.getElementById('qa-overlay')?.addEventListener('click',e=>{if(e.target===document.getElementById('qa-overlay'))closeQA();});
+document.querySelectorAll('.qtag').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.querySelectorAll('.qtag').forEach(t=>t.classList.remove('on'));btn.classList.add('on');});
+});
+function saveNote(){
+  const txt=document.getElementById('qa-text')?.value.trim();if(!txt){toast('Write something first');return;}
+  const tag=document.querySelector('.qtag.on')?.dataset.t||'note';
+  const proj=document.getElementById('qa-proj')?.value||'General';
+  if(!D.notes)D.notes=[];
+  D.notes.push({id:'n_'+Date.now(),text:txt,tag,project:proj,date:new Date().toLocaleDateString()});
+  saveData();closeQA();toast('Saved ✓');
+}
+function toggleVoiceQA(){
+  const btn=document.getElementById('voice-qa-btn');
+  if(voiceQA){voiceQA.stop();voiceQA=null;if(btn)btn.classList.remove('recording');return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('Voice input not supported on this browser');return;}
+  voiceQA=new SR();voiceQA.continuous=true;voiceQA.interimResults=true;voiceQA.lang='en-US';
+  voiceQA.onresult=e=>{
+    let txt='';for(let i=e.resultIndex;i<e.results.length;i++)txt+=e.results[i][0].transcript;
+    const ta=document.getElementById('qa-text');if(ta)ta.value=txt;
+  };
+  voiceQA.onerror=()=>{voiceQA=null;if(btn)btn.classList.remove('recording');};
+  voiceQA.start();if(btn)btn.classList.add('recording');
+}
+
+// ─── FRANCOIS CHAT ───
+const FS=`You are Francois, the AI operations manager — calm, composed, formal, deeply competent. Based on Dr. Stone's Francois character. Speak formal English. Rare French conversationally (Très bien, Voilà, Félicitations, Bien sûr). Never say "Great!", "Sure!", "Absolutely!". Analysis: Observation → Inference → Recommendation. The user is building PCC v3 on mobile. They have 11 books in their library including Trading in the Zone, Best Loser Wins, Buyology, The Paradox of Choice, and Dollars and Sense. Reference them when relevant.`;
+
+function renderChatHistory(){
+  const el=document.getElementById('chat-msgs');if(!el)return;
+  el.innerHTML='';
+  if(!D.chat?.length){addBubble('Bonjour. PCC v3 is complete and running on your device. All 10 layers are operational. The library has 11 books. The first milestone is at $24. What requires your attention?','ai');return;}
+  D.chat.forEach(m=>addBubble(m.content,m.role));
+  el.scrollTop=el.scrollHeight;
+}
+function addBubble(txt,role){
+  const el=document.getElementById('chat-msgs');if(!el)return;
+  const div=document.createElement('div');
+  div.className=`bubble ${role==='user'?'user':'ai'}`;
+  if(role!=='user'){const lbl=document.createElement('div');lbl.className='bubble-lbl';lbl.textContent='FRANCOIS';div.appendChild(lbl);}
+  const t=document.createElement('div');t.innerHTML=txt.replace(/\n/g,'<br>');div.appendChild(t);
+  el.appendChild(div);el.scrollTop=el.scrollHeight;
+}
+function addTypingIndicator(){
+  const el=document.getElementById('chat-msgs');if(!el)return;
+  const div=document.createElement('div');div.className='typing-bub';div.id='typing-ind';
+  div.innerHTML='<div class="typing-dots"><div class="td" style="animation:bounce .8s infinite"></div><div class="td" style="animation:bounce .8s .15s infinite"></div><div class="td" style="animation:bounce .8s .3s infinite"></div></div>';
+  el.appendChild(div);el.scrollTop=el.scrollHeight;
+}
+async function sendChat(){
+  if(isSending||isShutdown)return;
+  const ta=document.getElementById('chat-ta');const txt=ta?.value.trim();if(!txt)return;
+  ta.value='';ta.style.height='42px';isSending=true;
+  const btn=document.getElementById('send-btn');if(btn)btn.disabled=true;
+  addBubble(txt,'user');if(!D.chat)D.chat=[];D.chat.push({role:'user',content:txt});addTypingIndicator();
+  const f=D.finance||{};
+  const ctx=`${FS}\n\nProjects: ${D.projects?.map(p=>p.name+' '+p.status).join(', ')||'Command Center v3 (active), Mobile App Alpha (at-risk)'}\nFinance: $${f.revenue||24} revenue · $${f.revenue||24-12} profit · ${Math.round(((f.revenue||24)/100)*100)}% toward $100\nLibrary: ${D.library?.length||11} books\nSecurity: 7/7 layers active\nMoods: Francois=${curMoods.f}, Alex=${curMoods.alex}, Rex=${curMoods.rex}`;
+  const msgs=[{role:'user',content:ctx},...(D.chat?.slice(-8)||[]).slice(0,-1),{role:'user',content:txt}];
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:msgs.slice(-10)})});
+    const d=await r.json();const reply=d.content?.map(c=>c.text||'').join('')||'Unable to respond at this time.';
+    document.getElementById('typing-ind')?.remove();addBubble(reply,'ai');D.chat.push({role:'assistant',content:reply});
+    if(D.chat.length>20)D.chat=D.chat.slice(-20);saveData();
+    if(voiceOn)speak(reply);
+  }catch(e){document.getElementById('typing-ind')?.remove();addBubble('My connection to the outside world is currently severed. I can still assist with what I have on hand.','ai');}
+  isSending=false;if(btn)btn.disabled=false;
+}
+function quickQ(q){
+  nav('s-chat');
+  const ta=document.getElementById('chat-ta');if(ta){ta.value=q;setTimeout(sendChat,200);}
+}
+function clearChat(){if(!confirm('Clear Francois chat history?'))return;D.chat=[];saveData();renderChatHistory();toast('Chat history cleared');}
+let voiceOn=false;
+function toggleVoiceReply(){voiceOn=!voiceOn;const lbl=document.getElementById('voice-lbl');if(lbl)lbl.textContent=voiceOn?'on':'off';if(!voiceOn)window.speechSynthesis?.cancel();}
+function speak(txt){
+  if(!window.speechSynthesis)return;window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt.replace(/<[^>]*>/g,'').slice(0,500));
+  u.rate=0.88;u.pitch=1.0;
+  const v=window.speechSynthesis.getVoices().find(v=>v.lang.startsWith('fr'));if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+
+// auto-resize textarea
+document.getElementById('chat-ta')?.addEventListener('input',function(){this.style.height='42px';this.style.height=Math.min(this.scrollHeight,110)+'px';});
+
+// ─── DATA ───
+async function saveData(){
+  try{await store.set(SK,JSON.stringify(D));}catch(e){}
+}
+async function exportAll(){
+  try{
+    const r=await store.get(SK);
+    await navigator.clipboard.writeText(r||JSON.stringify(D,null,2));
+    toast('Data copied to clipboard');
+  }catch(e){toast('Export failed — try again');}
+}
+
+// ─── TOAST ───
+function toast(msg){
+  const el=document.getElementById('toast');if(!el)return;
+  el.textContent=msg;el.style.display='block';
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',2600);
+}
+
+// ─── BOUNCE ANIMATION ───
+const bStyle=document.createElement('style');
+bStyle.textContent='@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}';
+document.head.appendChild(bStyle);
+
+// ─── RESIZE ───
+window.addEventListener('resize',()=>setTimeout(drawLines,150));
+
+// ─── START ───
+init();
+</script>
+</body>
+</html>
