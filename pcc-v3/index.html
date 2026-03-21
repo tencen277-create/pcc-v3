@@ -49,14 +49,14 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .icon-btn:active{transform:scale(.9)}
 
 /* SCREENS */
-.screens{flex:1;overflow:hidden;position:relative}
-.screen{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 12px);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;transform:translateY(6px)}
-.screen.active{opacity:1;pointer-events:all;transform:translateY(0)}
+.screens{flex:1;overflow:hidden;position:relative;z-index:1}
+.screen{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;transform:translateY(6px)}
+.screen.active{opacity:1;pointer-events:all;transform:translateY(0);overflow-y:auto}
 
 /* BOTTOM NAV */
-.bnav{flex-shrink:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding-bottom:var(--safe-bottom);z-index:20}
+.bnav{flex-shrink:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding-bottom:var(--safe-bottom);z-index:50;position:relative}
 .bnav-inner{display:flex;height:var(--nav-h)}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;padding:0;min-height:44px;position:relative;transition:transform .1s}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;padding:8px 0;min-height:44px;position:relative;transition:transform .1s;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .ni:active{transform:scale(.88)}
 .ni-ico{font-size:20px;line-height:1;transition:transform .2s}
 .ni-lbl{font-size:9px;font-weight:500;color:var(--txt3);letter-spacing:.3px}
@@ -107,7 +107,7 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .ms-fill{height:100%;border-radius:99px;background:var(--g);transition:width .8s}
 
 /* PROJECT CARDS */
-.proj-card{margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all .15s}
+.proj-card{margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;padding:12px 14px;cursor:pointer;transition:all .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .proj-card:active{transform:scale(.98);border-color:var(--bdr2)}
 .pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
 .pc-name{font-size:14px;font-weight:600;color:var(--txt)}
@@ -159,7 +159,7 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .chat-wrap{display:flex;flex-direction:column;height:100%;padding-bottom:0}
 .chat-chips{display:flex;gap:6px;padding:10px 16px 6px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 .chat-chips::-webkit-scrollbar{display:none}
-.chip{font-size:11px;padding:6px 13px;border-radius:99px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt2);cursor:pointer;white-space:nowrap;font-family:var(--f);font-weight:500;transition:all .15s;flex-shrink:0}
+.chip{font-size:11px;padding:6px 13px;border-radius:99px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt2);cursor:pointer;white-space:nowrap;font-family:var(--f);font-weight:500;transition:all .15s;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .chip:active{background:var(--bg3);transform:scale(.95)}
 .chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px;display:flex;flex-direction:column;gap:10px;padding-bottom:140px}
 .bubble{max-width:88%;padding:10px 13px;font-size:13px;line-height:1.6;border-radius:16px}
@@ -169,11 +169,11 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .typing-bub{align-self:flex-start;background:var(--bg);border:0.5px solid var(--bdr);border-radius:4px 16px 16px 16px;padding:10px 13px}
 .typing-dots{display:flex;gap:3px;align-items:center}
 .td{width:5px;height:5px;border-radius:50%;background:var(--txt3)}
-.chat-input-wrap{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom));left:0;right:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding:10px 16px;z-index:15}
+.chat-input-wrap{position:sticky;bottom:0;left:0;right:0;background:var(--bg);border-top:0.5px solid var(--bdr);padding:10px 16px;z-index:15}
 .chat-input-row{display:flex;gap:8px;align-items:flex-end}
 .chat-ta{flex:1;font-size:14px;padding:10px 13px;border-radius:14px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);resize:none;min-height:42px;max-height:110px;outline:none;line-height:1.5;transition:border-color .15s}
 .chat-ta:focus{border-color:var(--g)}
-.send-btn{width:42px;height:42px;border-radius:50%;background:var(--g);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0;transition:all .15s}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--g);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0;transition:all .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .send-btn:active{transform:scale(.88)}
 .send-btn:disabled{opacity:.5}
 .chat-actions{display:flex;gap:6px;margin-top:6px}
@@ -195,7 +195,7 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .qa-ta:focus{border-color:var(--g)}
 .qa-bottom{display:flex;gap:8px;padding:0 16px;align-items:center}
 .qa-sel{flex:1;font-size:13px;padding:10px 12px;border-radius:11px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--f);outline:none}
-.qa-save{font-size:13px;padding:10px 20px;border-radius:11px;background:var(--g);color:#fff;border:none;font-family:var(--f);font-weight:600;cursor:pointer;transition:all .15s}
+.qa-save{font-size:13px;padding:10px 20px;border-radius:11px;background:var(--g);color:#fff;border:none;font-family:var(--f);font-weight:600;cursor:pointer;transition:all .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .qa-save:active{transform:scale(.95)}
 .voice-btn-qa{font-size:18px;width:42px;height:42px;border-radius:50%;border:0.5px solid var(--bdr2);background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
 .voice-btn-qa.recording{background:var(--rb);border-color:var(--r);animation:recPulse .8s infinite}
@@ -303,7 +303,7 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .ni-meta{font-size:10px;color:var(--txt3);margin-top:4px}
 
 /* MORE NAV LIST */
-.more-item{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:0.5px solid var(--bdr);cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
+.more-item{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:0.5px solid var(--bdr);cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .more-item:active{background:var(--bg2)}
 .mi-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .mi-name{font-size:14px;font-weight:600;color:var(--txt)}
@@ -339,12 +339,12 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
       </div>
     </div>
     <div class="tb-right">
-      <div class="icon-btn" id="theme-btn" onclick="toggleTheme()">☀</div>
+      <div class="icon-btn" id="theme-btn" onclick="toggleTheme()" ontouchend="(function(e){e.preventDefault();toggleTheme()})()">☀</div>
     </div>
   </div>
 
   <!-- SCREENS -->
-  <div class="screens">
+  <div class="screens" id="screens">
 
     <!-- HOME -->
     <div class="screen active" id="s-home" data-title="Home">
@@ -371,13 +371,13 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
         <div class="mcard"><div class="mv" id="stat-books">11</div><div class="ml">library books</div></div>
       </div>
       <div class="section-head"><span class="sh-title">Active projects</span></div>
-      <div class="proj-card" onclick="goScreen('s-finance')">
+      <div class="proj-card" ontouchend="(function(e){e.preventDefault();goScreen('s-finance')})()" onclick="goScreen('s-finance')">
         <div class="pc-top"><span class="pc-name">Command Center v3</span><div style="display:flex;gap:4px"><span class="badge bg-b">coding</span><span class="badge bg-g">active</span></div></div>
         <div class="pc-desc">Mobile-first hub — all 10 layers live.</div>
         <div class="pbar"><div class="pf" style="width:100%"></div></div>
         <div class="pc-meta"><span>100%</span><span>Layer 10 complete</span></div>
       </div>
-      <div class="proj-card at-risk" onclick="goScreen('s-security')">
+      <div class="proj-card at-risk" ontouchend="(function(e){e.preventDefault();goScreen('s-security')})()" onclick="goScreen('s-security')">
         <div class="pc-top"><span class="pc-name">Mobile App Alpha</span><div style="display:flex;gap:4px"><span class="badge bg-p">mobile</span><span class="badge bg-r">at-risk</span></div></div>
         <div class="pc-desc">React Native — 32% complete.</div>
         <div class="pbar"><div class="pf" style="width:32%"></div></div>
@@ -408,22 +408,22 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
           <div style="position:absolute;bottom:24px;left:20px;width:60px;height:13px;border-radius:3px;background:#d4cfc8;border:0.5px solid rgba(0,0,0,.1);z-index:2"></div>
           <div class="r-table" id="r-table"><div class="r-tbl-lbl" id="r-tbl-lbl">shared<br>workspace</div></div>
           <svg class="conn-svg" id="conn-svg"></svg>
-          <div class="sprite" id="sp-you" style="top:14px;left:50%;transform:translateX(-50%)" onclick="showTT('you',event)">
+          <div class="sprite" id="sp-you" style="top:14px;left:50%;transform:translateX(-50%)" onclick="showTT('you',event)" ontouchend="function(e){e.preventDefault();showTT('you',event)}">
             <div class="sb" id="sb-you"><div class="face"><div class="eyes"><div class="eye" id="ey-you-l"></div><div class="eye" id="ey-you-r"></div></div><div class="mouth" id="mo-you"></div></div><div class="sdot" id="sd-you"></div></div>
             <div class="ntag"><div class="nt-n">You</div></div>
             <div class="mpill" id="mp-you"></div>
           </div>
-          <div class="sprite" id="sp-f" style="bottom:14px;left:50%;transform:translateX(-50%)" onclick="showTT('f',event)">
+          <div class="sprite" id="sp-f" style="bottom:14px;left:50%;transform:translateX(-50%)" onclick="showTT('f',event)" ontouchend="function(e){e.preventDefault();showTT('f',event)}">
             <div class="sb" id="sb-f"><div class="face"><div class="eyes"><div class="eye" id="ey-f-l"></div><div class="eye" id="ey-f-r"></div></div><div class="mouth" id="mo-f"></div></div><div class="sdot" id="sd-f"></div></div>
             <div class="ntag"><div class="nt-n">Francois</div></div>
             <div class="mpill" id="mp-f"></div>
           </div>
-          <div class="sprite" id="sp-alex" style="top:50%;left:14px;transform:translateY(-50%)" onclick="showTT('alex',event)">
+          <div class="sprite" id="sp-alex" style="top:50%;left:14px;transform:translateY(-50%)" onclick="showTT('alex',event)" ontouchend="function(e){e.preventDefault();showTT('alex',event)}">
             <div class="sb" id="sb-alex"><div class="face"><div class="eyes"><div class="eye" id="ey-alex-l"></div><div class="eye" id="ey-alex-r"></div></div><div class="mouth" id="mo-alex"></div></div><div class="sdot" id="sd-alex"></div></div>
             <div class="ntag"><div class="nt-n">Alex</div></div>
             <div class="mpill" id="mp-alex"></div>
           </div>
-          <div class="sprite" id="sp-rex" style="top:50%;right:54px;transform:translateY(-50%)" onclick="showTT('rex',event)">
+          <div class="sprite" id="sp-rex" style="top:50%;right:54px;transform:translateY(-50%)" onclick="showTT('rex',event)" ontouchend="function(e){e.preventDefault();showTT('rex',event)}">
             <div class="sb" id="sb-rex"><div class="face"><div class="eyes"><div class="eye" id="ey-rex-l"></div><div class="eye" id="ey-rex-r"></div></div><div class="mouth" id="mo-rex"></div></div><div class="sdot" id="sd-rex"></div></div>
             <div class="ntag"><div class="nt-n">Rex Bot</div></div>
             <div class="mpill" id="mp-rex"></div>
@@ -436,10 +436,10 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
         </div>
       </div>
       <div class="room-controls">
-        <button class="btn sm" id="meet-btn" onclick="toggleMeeting()">Call meeting</button>
-        <button class="btn sm" onclick="setMoodScenario('crisis')">Crisis</button>
-        <button class="btn sm" onclick="setMoodScenario('calm')">Calm</button>
-        <button class="btn sm" onclick="setMoodScenario('milestone')">Milestone</button>
+        <button class="btn sm" id="meet-btn" ontouchend="(function(e){e.preventDefault();toggleMeeting()})()" onclick="toggleMeeting()">Call meeting</button>
+        <button class="btn sm" ontouchend="(function(e){e.preventDefault();setMoodScenario('crisis')})()" onclick="setMoodScenario('crisis')">Crisis</button>
+        <button class="btn sm" ontouchend="(function(e){e.preventDefault();setMoodScenario('calm')})()" onclick="setMoodScenario('calm')">Calm</button>
+        <button class="btn sm" ontouchend="(function(e){e.preventDefault();setMoodScenario('milestone')})()" onclick="setMoodScenario('milestone')">Milestone</button>
       </div>
       <div class="section-head"><span class="sh-title">Task inbox</span></div>
       <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="task-inbox"></div>
@@ -448,16 +448,24 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
     </div>
 
     <!-- FRANCOIS CHAT -->
-    <div class="screen" id="s-chat" data-title="Francois">
-      <div class="chat-wrap">
-        <div class="chat-chips">
-          <div class="chip" onclick="quickQ('Give me a full project status report.')">Status report</div>
-          <div class="chip" onclick="quickQ('What should I focus on this week?')">This week</div>
-          <div class="chip" onclick="quickQ('How are we tracking toward the $100 milestone?')">Milestone</div>
-          <div class="chip" onclick="quickQ('What book from my library is most relevant right now?')">Book rec</div>
-          <div class="chip" onclick="quickQ('Run a security assessment.')">Security audit</div>
+    <div class="screen" id="s-chat" data-title="Francois" style="display:flex;flex-direction:column;padding-bottom:0">
+      <div class="chat-chips" style="flex-shrink:0">
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('Give me a full project status report.')})()" onclick="quickQ('Give me a full project status report.')">Status report</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('What should I focus on this week?')})()" onclick="quickQ('What should I focus on this week?')">This week</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('How are we tracking toward the $100 milestone?')})()" onclick="quickQ('How are we tracking toward the $100 milestone?')">Milestone</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('What book from my library is most relevant right now?')})()" onclick="quickQ('What book from my library is most relevant right now?')">Book rec</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('Run a security assessment.')})()" onclick="quickQ('Run a security assessment.')">Security audit</div>
+      </div>
+      <div class="chat-msgs" id="chat-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 10px;display:flex;flex-direction:column;gap:10px"></div>
+      <div class="chat-input-wrap" id="chat-input-wrap">
+        <div class="chat-input-row">
+          <textarea class="chat-ta" id="chat-ta" placeholder="Ask Francois anything..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendChat()" ontouchend="(function(e){e.preventDefault();sendChat()})()">➤</button>
         </div>
-        <div class="chat-msgs" id="chat-msgs"></div>
+        <div class="chat-actions">
+          <button class="btn sm" onclick="toggleVoiceReply()">Voice: <span id="voice-lbl">off</span></button>
+          <button class="btn sm" onclick="clearChat()">Clear history</button>
+        </div>
       </div>
     </div>
 
@@ -547,16 +555,16 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
     <!-- MORE -->
     <div class="screen" id="s-more" data-title="More">
       <div style="padding:8px 0">
-        <div class="more-item" onclick="goScreen('s-team')"><div class="mi-ico" style="background:var(--gb)">⬡</div><div><div class="mi-name">Team hub</div><div class="mi-sub">Room · Moods · Achievements · Tasks</div></div><span class="mi-arr">›</span></div>
-        <div class="more-item" onclick="goScreen('s-finance')"><div class="mi-ico" style="background:var(--gb)">$</div><div><div class="mi-name">Finance & wealth</div><div class="mi-sub">$24/$100 · Transactions · Milestones</div></div><span class="mi-arr">›</span></div>
-        <div class="more-item" onclick="goScreen('s-security')"><div class="mi-ico" style="background:var(--rb)">⚠</div><div><div class="mi-name">Security</div><div class="mi-sub">Francois Shield · 7 layers · Emergency shutdown</div></div><span class="mi-badge bg-g">Protected</span></div>
-        <div class="more-item" onclick="goScreen('s-comms')"><div class="mi-ico" style="background:var(--bb)">↗</div><div><div class="mi-name">Communications</div><div class="mi-sub">Telegram · Discord · Slack · WhatsApp</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-team')})()" onclick="goScreen('s-team')"><div class="mi-ico" style="background:var(--gb)">⬡</div><div><div class="mi-name">Team hub</div><div class="mi-sub">Room · Moods · Achievements · Tasks</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-finance')})()" onclick="goScreen('s-finance')"><div class="mi-ico" style="background:var(--gb)">$</div><div><div class="mi-name">Finance & wealth</div><div class="mi-sub">$24/$100 · Transactions · Milestones</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-security')})()" onclick="goScreen('s-security')"><div class="mi-ico" style="background:var(--rb)">⚠</div><div><div class="mi-name">Security</div><div class="mi-sub">Francois Shield · 7 layers · Emergency shutdown</div></div><span class="mi-badge bg-g">Protected</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-comms')})()" onclick="goScreen('s-comms')"><div class="mi-ico" style="background:var(--bb)">↗</div><div><div class="mi-name">Communications</div><div class="mi-sub">Telegram · Discord · Slack · WhatsApp</div></div><span class="mi-arr">›</span></div>
         <div class="more-item"><div class="mi-ico" style="background:var(--pb)">◉</div><div><div class="mi-name">HR department</div><div class="mi-sub">Suggestions · Compensation · Conduct</div></div><span class="mi-arr">›</span></div>
         <div class="more-item"><div class="mi-ico" style="background:var(--ab)">📚</div><div><div class="mi-name">Library</div><div class="mi-sub" id="more-lib-sub">11 books · Francois knowledge base</div></div><span class="mi-arr">›</span></div>
         <div class="more-item"><div class="mi-ico" style="background:var(--rb)">🛡</div><div><div class="mi-name">Safety</div><div class="mi-sub">3 open items · Run AI scan</div></div><span class="mi-arr">›</span></div>
-        <div class="more-item" onclick="toggleTheme()"><div class="mi-ico" style="background:var(--bg2)">☀</div><div><div class="mi-name">Toggle dark mode</div><div class="mi-sub">Current: <span id="theme-lbl">light</span></div></div><div class="toggle on" id="tog-theme" style="pointer-events:none"><div class="toggle-thumb"></div></div></div>
-        <div class="more-item" onclick="clearChat()"><div class="mi-ico" style="background:var(--bg2)">✦</div><div><div class="mi-name">Clear Francois history</div><div class="mi-sub">Reset chat context</div></div><span class="mi-arr">›</span></div>
-        <div class="more-item" onclick="exportAll()"><div class="mi-ico" style="background:var(--bg2)">⊕</div><div><div class="mi-name">Export all data</div><div class="mi-sub">JSON backup to clipboard</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();toggleTheme()})()" onclick="toggleTheme()"><div class="mi-ico" style="background:var(--bg2)">☀</div><div><div class="mi-name">Toggle dark mode</div><div class="mi-sub">Current: <span id="theme-lbl">light</span></div></div><div class="toggle on" id="tog-theme" style="pointer-events:none"><div class="toggle-thumb"></div></div></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();clearChat()})()" onclick="clearChat()"><div class="mi-ico" style="background:var(--bg2)">✦</div><div><div class="mi-name">Clear Francois history</div><div class="mi-sub">Reset chat context</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();exportAll()})()" onclick="exportAll()"><div class="mi-ico" style="background:var(--bg2)">⊕</div><div><div class="mi-name">Export all data</div><div class="mi-sub">JSON backup to clipboard</div></div><span class="mi-arr">›</span></div>
       </div>
     </div>
 
@@ -565,17 +573,17 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
   <!-- BOTTOM NAV -->
   <div class="bnav">
     <div class="bnav-inner">
-      <button class="ni on" id="ni-home" onclick="nav('s-home')"><div class="ni-ico">⌂</div><div class="ni-lbl">Home</div></button>
-      <button class="ni" id="ni-team" onclick="nav('s-team')"><div class="ni-ico">⬡</div><div class="ni-lbl">Team</div></button>
-      <button class="ni" id="ni-qa" onclick="openQA()"><div class="ni-ico" style="font-size:24px;transition:transform .2s">+</div><div class="ni-lbl">Add</div></button>
-      <button class="ni" id="ni-chat" onclick="nav('s-chat')"><div class="ni-ico">✦</div><div class="ni-lbl">Francois</div></button>
-      <button class="ni" id="ni-more" onclick="nav('s-more')"><div class="ni-ico">≡</div><div class="ni-lbl">More</div></button>
+      <button class="ni on" id="ni-home" onclick="nav('s-home')" ontouchend="e=>{e.preventDefault();nav('s-home')}"><div class="ni-ico">⌂</div><div class="ni-lbl">Home</div></button>
+      <button class="ni" id="ni-team" onclick="nav('s-team')" ontouchend="e=>{e.preventDefault();nav('s-team')}"><div class="ni-ico">⬡</div><div class="ni-lbl">Team</div></button>
+      <button class="ni" id="ni-qa" onclick="openQA()" ontouchend="e=>{e.preventDefault();openQA()}"><div class="ni-ico" style="font-size:24px;transition:transform .2s">+</div><div class="ni-lbl">Add</div></button>
+      <button class="ni" id="ni-chat" onclick="nav('s-chat')" ontouchend="e=>{e.preventDefault();nav('s-chat')}"><div class="ni-ico">✦</div><div class="ni-lbl">Francois</div></button>
+      <button class="ni" id="ni-more" onclick="nav('s-more')" ontouchend="e=>{e.preventDefault();nav('s-more')}"><div class="ni-ico">≡</div><div class="ni-lbl">More</div></button>
     </div>
   </div>
 
   <!-- QUICK ADD OVERLAY -->
-  <div class="qa-overlay" id="qa-overlay" onclick="e=>e.target===this&&closeQA()">
-    <div class="qa-sheet" onclick="e=>e.stopPropagation()">
+  <div class="qa-overlay" id="qa-overlay" id="qa-overlay">
+    <div class="qa-sheet" id="qa-sheet">
       <div class="qa-handle"></div>
       <div class="qa-title">Quick add</div>
       <div class="qa-tags" id="qa-tags">
@@ -589,20 +597,8 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
       <div class="qa-bottom">
         <button class="voice-btn-qa" id="voice-qa-btn" onclick="toggleVoiceQA()">🎤</button>
         <select class="qa-sel" id="qa-proj"><option>General</option></select>
-        <button class="qa-save" onclick="saveNote()">Save</button>
+        <button class="qa-save" onclick="saveNote()" ontouchend="(function(e){e.preventDefault();saveNote()})()">Save</button>
       </div>
-    </div>
-  </div>
-
-  <!-- CHAT INPUT (fixed) -->
-  <div class="chat-input-wrap" id="chat-input-wrap" style="display:none">
-    <div class="chat-input-row">
-      <textarea class="chat-ta" id="chat-ta" placeholder="Ask Francois anything..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendChat()">➤</button>
-    </div>
-    <div class="chat-actions">
-      <button class="btn sm" onclick="toggleVoiceReply()">Voice: <span id="voice-lbl">off</span></button>
-      <button class="btn sm" onclick="clearChat()">Clear history</button>
     </div>
   </div>
 
@@ -704,9 +700,8 @@ function nav(screenId){
   const ni=document.getElementById(map[screenId]);if(ni)ni.classList.add('on');
   const titleEl=document.getElementById('tb-title');
   if(titleEl&&sc)titleEl.textContent=sc.dataset.title||'PCC v3';
-  const ciw=document.getElementById('chat-input-wrap');
-  if(ciw)ciw.style.display=screenId==='s-chat'?'block':'none';
   if(screenId==='s-team'){setTimeout(drawLines,250);}
+  if(screenId==='s-chat'){setTimeout(()=>{const msgs=document.getElementById('chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight;},100);}
 }
 function goScreen(id){nav(id);}
 
@@ -1096,7 +1091,14 @@ function openQA(){
   setTimeout(()=>document.getElementById('qa-text')?.focus(),350);
 }
 function closeQA(){document.getElementById('qa-overlay').classList.remove('open');qaOpen=false;document.getElementById('qa-text').value='';}
-document.getElementById('qa-overlay')?.addEventListener('click',e=>{if(e.target===document.getElementById('qa-overlay'))closeQA();});
+// QA overlay touch + click handling
+const qaOvl = document.getElementById('qa-overlay');
+const qaSheet = document.getElementById('qa-sheet');
+if(qaOvl){
+  const closeIfOutside = e => { if(!qaSheet?.contains(e.target)) closeQA(); };
+  qaOvl.addEventListener('click', closeIfOutside);
+  qaOvl.addEventListener('touchend', e => { e.preventDefault(); closeIfOutside(e); });
+}
 document.querySelectorAll('.qtag').forEach(btn=>{
   btn.addEventListener('click',()=>{document.querySelectorAll('.qtag').forEach(t=>t.classList.remove('on'));btn.classList.add('on');});
 });
