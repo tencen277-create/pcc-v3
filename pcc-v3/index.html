@@ -320,6 +320,41 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
 .pwa-num{width:20px;height:20px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px}
 .pwa-txt{font-size:12px;color:var(--bt);line-height:1.6}
 .pwa-txt strong{font-weight:600}
+
+/* TRADING BOT */
+.tb-hero{margin:8px 16px;background:var(--bg2);border-radius:16px;padding:14px 16px;border:0.5px solid var(--bdr)}
+.tb-status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.tb-badge{font-size:11px;padding:4px 11px;border-radius:99px;font-weight:600;display:flex;align-items:center;gap:5px}
+.tb-dot{width:6px;height:6px;border-radius:50%}
+.tb-dot.live{animation:tbPulse 1.2s infinite}
+@keyframes tbPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.tb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.tb-stat{background:var(--bg3);border-radius:10px;padding:8px;text-align:center}
+.tb-stat-v{font-size:16px;font-weight:600;font-family:var(--m);letter-spacing:-.5px}
+.tb-stat-l{font-size:9px;color:var(--txt2);margin-top:2px}
+.sig-list{margin:0 16px 8px;background:var(--bg);border:0.5px solid var(--bdr);border-radius:14px;overflow:hidden}
+.sig-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--bdr)}
+.sig-row:last-child{border-bottom:none}
+.sig-type{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.4px;flex-shrink:0;min-width:36px;text-align:center}
+.sig-buy{background:var(--gb);color:var(--gt)}
+.sig-sell{background:var(--rb);color:var(--rt)}
+.sig-hold{background:var(--ab);color:var(--at)}
+.sig-sym{font-size:13px;font-weight:600;font-family:var(--m);flex:1}
+.sig-note{font-size:10px;color:var(--txt2)}
+.sig-meta{text-align:right}
+.sig-price{font-size:11px;font-family:var(--m);color:var(--txt)}
+.sig-time{font-size:10px;color:var(--txt3);margin-top:1px}
+.tlog-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--bdr)}
+.tlog-row:last-child{border-bottom:none}
+.tlog-sym{font-size:13px;font-weight:600;font-family:var(--m);flex:1}
+.tlog-sub{font-size:10px;color:var(--txt2)}
+.tlog-pnl{font-size:13px;font-weight:600;font-family:var(--m)}
+.risk-form{padding:0 16px;margin-bottom:8px}
+.risk-row{display:flex;gap:8px;margin-bottom:8px}
+.risk-field{flex:1}
+.risk-field label{font-size:11px;color:var(--txt2);display:block;margin-bottom:4px;font-weight:500}
+.risk-inp{width:100%;font-size:13px;padding:9px 11px;border-radius:11px;border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);font-family:var(--m);outline:none;transition:border-color .15s}
+.risk-inp:focus{border-color:var(--g)}
 </style>
 </head>
 <body>
@@ -456,6 +491,9 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
           <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('How are we tracking toward the $100 milestone?')})()" onclick="quickQ('How are we tracking toward the $100 milestone?')">Milestone</div>
           <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('What book from my library is most relevant right now?')})()" onclick="quickQ('What book from my library is most relevant right now?')">Book rec</div>
           <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('Run a security assessment.')})()" onclick="quickQ('Run a security assessment.')">Security audit</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('Review my trading bot performance and suggest improvements based on Trading in the Zone.')})()" onclick="quickQ('Review my trading bot performance and suggest improvements based on Trading in the Zone.')">Bot review</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('What trading signals should I be watching right now? Reference Best Loser Wins.')})()" onclick="quickQ('What trading signals should I be watching right now? Reference Best Loser Wins.')">Trade signals</div>
+          <div class="chip" ontouchend="(function(e){e.preventDefault();quickQ('Help me refine my risk management rules for the trading bot.')})()" onclick="quickQ('Help me refine my risk management rules for the trading bot.')">Risk rules</div>
       </div>
       <div class="chat-msgs" id="chat-msgs" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 10px;display:flex;flex-direction:column;gap:10px"></div>
       <div class="chat-input-wrap" id="chat-input-wrap">
@@ -558,6 +596,7 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
       <div style="padding:8px 0">
         <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-team')})()" onclick="goScreen('s-team')"><div class="mi-ico" style="background:var(--gb)">⬡</div><div><div class="mi-name">Team hub</div><div class="mi-sub">Room · Moods · Achievements · Tasks</div></div><span class="mi-arr">›</span></div>
         <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-finance')})()" onclick="goScreen('s-finance')"><div class="mi-ico" style="background:var(--gb)">$</div><div><div class="mi-name">Finance & wealth</div><div class="mi-sub">$24/$100 · Transactions · Milestones</div></div><span class="mi-arr">›</span></div>
+        <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-trading')})()" onclick="goScreen('s-trading')"><div class="mi-ico" style="background:var(--ab)">📈</div><div><div class="mi-name">Trading Bot</div><div class="mi-sub" id="more-bot-sub">Rex Bot · Signals · Risk settings</div></div><span class="mi-arr">›</span></div>
         <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-security')})()" onclick="goScreen('s-security')"><div class="mi-ico" style="background:var(--rb)">⚠</div><div><div class="mi-name">Security</div><div class="mi-sub">Francois Shield · 7 layers · Emergency shutdown</div></div><span class="mi-badge bg-g">Protected</span></div>
         <div class="more-item" ontouchend="(function(e){e.preventDefault();goScreen('s-comms')})()" onclick="goScreen('s-comms')"><div class="mi-ico" style="background:var(--bb)">↗</div><div><div class="mi-name">Communications</div><div class="mi-sub">Telegram · Discord · Slack · WhatsApp</div></div><span class="mi-arr">›</span></div>
         <div class="more-item"><div class="mi-ico" style="background:var(--pb)">◉</div><div><div class="mi-name">HR department</div><div class="mi-sub">Suggestions · Compensation · Conduct</div></div><span class="mi-arr">›</span></div>
@@ -566,6 +605,43 @@ body{display:flex;flex-direction:column;position:fixed;inset:0}
         <div class="more-item" ontouchend="(function(e){e.preventDefault();toggleTheme()})()" onclick="toggleTheme()"><div class="mi-ico" style="background:var(--bg2)">☀</div><div><div class="mi-name">Toggle dark mode</div><div class="mi-sub">Current: <span id="theme-lbl">light</span></div></div><div class="toggle on" id="tog-theme" style="pointer-events:none"><div class="toggle-thumb"></div></div></div>
         <div class="more-item" ontouchend="(function(e){e.preventDefault();clearChat()})()" onclick="clearChat()"><div class="mi-ico" style="background:var(--bg2)">✦</div><div><div class="mi-name">Clear Francois history</div><div class="mi-sub">Reset chat context</div></div><span class="mi-arr">›</span></div>
         <div class="more-item" ontouchend="(function(e){e.preventDefault();exportAll()})()" onclick="exportAll()"><div class="mi-ico" style="background:var(--bg2)">⊕</div><div><div class="mi-name">Export all data</div><div class="mi-sub">JSON backup to clipboard</div></div><span class="mi-arr">›</span></div>
+      </div>
+    </div>
+
+    <!-- TRADING BOT -->
+    <div class="screen" id="s-trading" data-title="Trading Bot">
+      <div class="tb-hero" id="tb-hero">
+        <div class="tb-status-row">
+          <div>
+            <div style="font-size:10px;font-weight:600;color:var(--txt3);letter-spacing:.4px;margin-bottom:4px">BOT STATUS</div>
+            <div class="tb-badge" id="tb-badge" style="background:var(--rb);color:var(--rt)">
+              <div class="tb-dot" id="tb-dot" style="background:var(--r)"></div>
+              <span id="tb-status-txt">Paused</span>
+            </div>
+          </div>
+          <button class="btn" id="tb-toggle-btn" onclick="toggleTradingBot()" ontouchend="(function(e){e.preventDefault();toggleTradingBot()})()">▶ Start bot</button>
+        </div>
+        <div class="tb-stats">
+          <div class="tb-stat"><div class="tb-stat-v" id="tb-pnl">+$0</div><div class="tb-stat-l">net P&L</div></div>
+          <div class="tb-stat"><div class="tb-stat-v" id="tb-winrate">—</div><div class="tb-stat-l">win rate</div></div>
+          <div class="tb-stat"><div class="tb-stat-v" id="tb-trades">0</div><div class="tb-stat-l">trades</div></div>
+        </div>
+      </div>
+      <div class="section-head"><span class="sh-title">Signal feed</span><span class="sh-action" onclick="addManualSignal()" ontouchend="(function(e){e.preventDefault();addManualSignal()})()">+ Manual</span></div>
+      <div id="signal-feed"></div>
+      <div class="section-head"><span class="sh-title">Trade log</span></div>
+      <div class="card" style="margin:0 16px;padding:0;overflow:hidden;margin-bottom:8px" id="trade-log"></div>
+      <div class="section-head"><span class="sh-title">Risk settings</span></div>
+      <div class="risk-form">
+        <div class="risk-row">
+          <div class="risk-field"><label>Max position ($)</label><input class="risk-inp" type="number" id="risk-pos" placeholder="50" oninput="saveRisk()"></div>
+          <div class="risk-field"><label>Stop loss (%)</label><input class="risk-inp" type="number" id="risk-sl" placeholder="2" oninput="saveRisk()"></div>
+          <div class="risk-field"><label>Take profit (%)</label><input class="risk-inp" type="number" id="risk-tp" placeholder="5" oninput="saveRisk()"></div>
+        </div>
+        <div class="f-note">
+          <div class="f-av" style="width:22px;height:22px;font-size:9px;flex-shrink:0">F</div>
+          <div class="fn-txt" id="tb-f-tip">"As <em>Trading in the Zone</em> reminds us — discipline in risk management is what separates consistent traders from gamblers. Set your limits before the session begins."</div>
+        </div>
       </div>
     </div>
 
@@ -624,7 +700,7 @@ const store={
 };
 
 const SK='pcc_data_v3',TK='pcc_theme_v3';
-let D={projects:[],notes:[],chat:[],library:[],finance:{revenue:24,expenses:12,transactions:[]},settings:{},threatLog:[]};
+let D={projects:[],notes:[],chat:[],library:[],finance:{revenue:24,expenses:12,transactions:[]},settings:{},threatLog:[],trading:{active:false,pnl:0,wins:0,losses:0,signals:[],trades:[],settings:{maxPos:50,stopLoss:2,takeProfit:5}}};
 let isDark=false,voiceOn=false,isSending=false,isShutdown=false,meeting=false,qaOpen=false,voiceQA=null,ttTimeout=null;
 let curMoods={you:'productive',f:'focused',alex:'analytical',rex:'operational'};
 let deferredInstall=null;
@@ -660,7 +736,7 @@ async function init(){
 
   try{
     const dv=await store.get(SK);
-    if(dv){const p=JSON.parse(dv);D={...D,...p};if(!D.finance)D.finance={revenue:24,expenses:12,transactions:[]};if(!D.threatLog)D.threatLog=[];if(!Array.isArray(D.library))D.library=[];}
+    if(dv){const p=JSON.parse(dv);D={...D,...p};if(!D.finance)D.finance={revenue:24,expenses:12,transactions:[]};if(!D.threatLog)D.threatLog=[];if(!Array.isArray(D.library))D.library=[];if(!D.trading)D.trading={active:false,pnl:0,wins:0,losses:0,signals:[],trades:[],settings:{maxPos:50,stopLoss:2,takeProfit:5}};}
   }catch(e){}
 
   renderAll();
@@ -689,6 +765,7 @@ function renderAll(){
   renderMsgSchedule();
   renderTxList();
   renderAIContrib();
+  renderTrading();
   calcAndApplyMoods();
   setTimeout(drawLines,300);
 }
@@ -721,6 +798,7 @@ function nav(screenId){
   if(titleEl && sc) titleEl.textContent = sc.dataset.title||'PCC v3';
   // Screen-specific actions
   if(screenId==='s-team') setTimeout(drawLines,300);
+  if(screenId==='s-trading') renderTrading();
   if(screenId==='s-chat'){
     setTimeout(function(){
       var msgs=document.getElementById('chat-msgs');
@@ -1152,7 +1230,7 @@ function toggleVoiceQA(){
 }
 
 // ─── FRANCOIS CHAT ───
-const FS=`You are Francois, the AI operations manager — calm, composed, formal, deeply competent. Based on Dr. Stone's Francois character. Speak formal English. Rare French conversationally (Très bien, Voilà, Félicitations, Bien sûr). Never say "Great!", "Sure!", "Absolutely!". Analysis: Observation → Inference → Recommendation. The user is building PCC v3 on mobile. They have 11 books in their library including Trading in the Zone, Best Loser Wins, Buyology, The Paradox of Choice, and Dollars and Sense. Reference them when relevant.`;
+const FS=`You are Francois, the AI operations manager — calm, composed, formal, deeply competent. Based on Dr. Stone's Francois character. Speak formal English. Rare French conversationally (Très bien, Voilà, Félicitations, Bien sûr). Never say "Great!", "Sure!", "Absolutely!". Analysis: Observation → Inference → Recommendation. The user is building PCC v3 on mobile. They have 11 books in their library including Trading in the Zone, Best Loser Wins, Buyology, The Paradox of Choice, and Dollars and Sense. Reference them when relevant. The system includes a Trading Bot managed by Rex Bot — it monitors BUY/SELL/HOLD signals, tracks win rate and net P&L, and enforces risk settings (max position, stop loss, take profit). When discussing trading, draw from Trading in the Zone (mindset, discipline, consistency) and Best Loser Wins (probabilistic thinking, accepting losses). Always reference risk management and pre-defined rules before entry.`;
 
 function renderChatHistory(){
   const el=document.getElementById('chat-msgs');if(!el)return;
@@ -1182,7 +1260,8 @@ async function sendChat(){
   const btn=document.getElementById('send-btn');if(btn)btn.disabled=true;
   addBubble(txt,'user');if(!D.chat)D.chat=[];D.chat.push({role:'user',content:txt});addTypingIndicator();
   const f=D.finance||{};
-  const ctx=`${FS}\n\nProjects: ${D.projects?.map(p=>p.name+' '+p.status).join(', ')||'Command Center v3 (active), Mobile App Alpha (at-risk)'}\nFinance: $${f.revenue||24} revenue · $${f.revenue||24-12} profit · ${Math.round(((f.revenue||24)/100)*100)}% toward $100\nLibrary: ${D.library?.length||11} books\nSecurity: 7/7 layers active\nMoods: Francois=${curMoods.f}, Alex=${curMoods.alex}, Rex=${curMoods.rex}`;
+  const tb=getTradingData();const tbTrades=[...DEFAULT_TRADES,...(tb.trades||[])];const tbWins=tbTrades.filter(t=>t.pnl>0).length;const tbWr=tbTrades.length?Math.round(tbWins/tbTrades.length*100):0;const tbPnl=tbTrades.reduce((s,t)=>s+t.pnl,0);
+  const ctx=`${FS}\n\nProjects: ${D.projects?.map(p=>p.name+' '+p.status).join(', ')||'Command Center v3 (active), Mobile App Alpha (at-risk)'}\nFinance: $${f.revenue||24} revenue · $${f.revenue||24-12} profit · ${Math.round(((f.revenue||24)/100)*100)}% toward $100\nLibrary: ${D.library?.length||11} books\nSecurity: 7/7 layers active\nTrading Bot: ${tb.active?'Running':'Paused'} · ${tbTrades.length} trades · ${tbWr}% win rate · net P&L $${tbPnl.toFixed(1)} · stop loss ${tb.settings?.stopLoss||2}% · take profit ${tb.settings?.takeProfit||5}%\nMoods: Francois=${curMoods.f}, Alex=${curMoods.alex}, Rex=${curMoods.rex}`;
   const msgs=[{role:'user',content:ctx},...(D.chat?.slice(-8)||[]).slice(0,-1),{role:'user',content:txt}];
   try{
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:msgs.slice(-10)})});
@@ -1198,7 +1277,6 @@ function quickQ(q){
   const ta=document.getElementById('chat-ta');if(ta){ta.value=q;setTimeout(sendChat,200);}
 }
 function clearChat(){if(!confirm('Clear Francois chat history?'))return;D.chat=[];saveData();renderChatHistory();toast('Chat history cleared');}
-let voiceOn=false;
 function toggleVoiceReply(){voiceOn=!voiceOn;const lbl=document.getElementById('voice-lbl');if(lbl)lbl.textContent=voiceOn?'on':'off';if(!voiceOn)window.speechSynthesis?.cancel();}
 function speak(txt){
   if(!window.speechSynthesis)return;window.speechSynthesis.cancel();
@@ -1210,6 +1288,184 @@ function speak(txt){
 
 // auto-resize textarea
 document.getElementById('chat-ta')?.addEventListener('input',function(){this.style.height='42px';this.style.height=Math.min(this.scrollHeight,110)+'px';});
+
+// ─── TRADING BOT ───
+const DEFAULT_SIGNALS=[
+  {type:'buy',sym:'BTC/USD',price:'67,420',time:'10:42 AM',note:'RSI oversold · momentum building'},
+  {type:'sell',sym:'ETH/USD',price:'3,512',time:'09:17 AM',note:'Resistance at key level'},
+  {type:'hold',sym:'SOL/USD',price:'142.30',time:'08:55 AM',note:'Consolidating · await breakout'},
+  {type:'buy',sym:'AAPL',price:'211.50',time:'08:30 AM',note:'EMA crossover confirmed'},
+];
+const DEFAULT_TRADES=[
+  {sym:'BTC/USD',type:'buy',entry:66800,exit:67420,pnl:18.5,date:'Mar 22'},
+  {sym:'ETH/USD',type:'sell',entry:3580,exit:3512,pnl:9.2,date:'Mar 21'},
+  {sym:'SOL/USD',type:'buy',entry:138,exit:135,pnl:-6.0,date:'Mar 20'},
+  {sym:'AAPL',type:'buy',entry:208,exit:211.5,pnl:7.0,date:'Mar 19'},
+];
+const SIGNAL_SYMBOLS=['BTC/USD','ETH/USD','SOL/USD','AAPL','NVDA','SPY'];
+const SIGNAL_NOTES={buy:['RSI oversold','EMA crossover','Support bounce','Volume surge'],sell:['Resistance hit','RSI overbought','Distribution pattern','Trend exhaustion'],hold:['Consolidating','Await breakout','Low volume','Mixed signals']};
+let botInterval=null;
+
+function getTradingData(){
+  if(!D.trading)D.trading={active:false,pnl:0,wins:0,losses:0,signals:[],trades:[],settings:{maxPos:50,stopLoss:2,takeProfit:5}};
+  if(!D.trading.signals)D.trading.signals=[];
+  if(!D.trading.trades)D.trading.trades=[];
+  if(!D.trading.settings)D.trading.settings={maxPos:50,stopLoss:2,takeProfit:5};
+  return D.trading;
+}
+
+function renderTrading(){
+  const t=getTradingData();
+  // hero stats
+  const allTrades=[...DEFAULT_TRADES,...t.trades];
+  const wins=allTrades.filter(tr=>tr.pnl>0).length;
+  const wr=allTrades.length?Math.round(wins/allTrades.length*100):0;
+  const totalPnl=allTrades.reduce((s,tr)=>s+tr.pnl,0);
+  const set=(id,v,col)=>{const el=document.getElementById(id);if(el){el.textContent=v;if(col)el.style.color=col;}};
+  const pnlColor=totalPnl>=0?'var(--g)':'var(--r)';
+  set('tb-pnl',(totalPnl>=0?'+':'')+'$'+Math.abs(totalPnl).toFixed(1),pnlColor);
+  set('tb-winrate',allTrades.length?wr+'%':'—');
+  set('tb-trades',allTrades.length);
+  // bot status
+  updateBotStatusUI(t.active);
+  // risk inputs
+  const pos=document.getElementById('risk-pos');const sl=document.getElementById('risk-sl');const tp=document.getElementById('risk-tp');
+  if(pos&&!pos.value)pos.value=t.settings.maxPos||50;
+  if(sl&&!sl.value)sl.value=t.settings.stopLoss||2;
+  if(tp&&!tp.value)tp.value=t.settings.takeProfit||5;
+  // feeds
+  renderSignalFeed();
+  renderTradeLog();
+  // More sub
+  const sub=document.getElementById('more-bot-sub');
+  if(sub)sub.textContent=(t.active?'Running':'Paused')+' · '+allTrades.length+' trades · '+wr+'% win rate';
+}
+
+function updateBotStatusUI(active){
+  const badge=document.getElementById('tb-badge');const dot=document.getElementById('tb-dot');const stxt=document.getElementById('tb-status-txt');const btn=document.getElementById('tb-toggle-btn');
+  if(active){
+    if(badge){badge.style.background='var(--gb)';badge.style.color='var(--gt)';}
+    if(dot){dot.style.background='var(--g)';dot.classList.add('live');}
+    if(stxt)stxt.textContent='Running';
+    if(btn){btn.textContent='⏸ Pause bot';btn.classList.add('pr');}
+  } else {
+    if(badge){badge.style.background='var(--rb)';badge.style.color='var(--rt)';}
+    if(dot){dot.style.background='var(--r)';dot.classList.remove('live');}
+    if(stxt)stxt.textContent='Paused';
+    if(btn){btn.textContent='▶ Start bot';btn.classList.remove('pr');}
+  }
+}
+
+function renderSignalFeed(){
+  const el=document.getElementById('signal-feed');if(!el)return;
+  const t=getTradingData();
+  // user signals newest-first, then defaults to fill remaining slots
+  const userSigs=[...t.signals].reverse().slice(0,6);
+  const signals=[...userSigs,...DEFAULT_SIGNALS].slice(0,6);
+  if(!signals.length){el.innerHTML='<div style="padding:16px;text-align:center;color:var(--txt3);font-size:12px">No signals yet — start the bot to receive signals</div>';return;}
+  el.innerHTML=`<div class="sig-list">${signals.map(s=>`
+    <div class="sig-row">
+      <span class="sig-type sig-${s.type}">${s.type.toUpperCase()}</span>
+      <div style="flex:1"><div class="sig-sym">${s.sym}</div><div class="sig-note">${s.note}</div></div>
+      <div class="sig-meta"><div class="sig-price">${s.price}</div><div class="sig-time">${s.time}</div></div>
+    </div>`).join('')}</div>`;
+}
+
+function renderTradeLog(){
+  const el=document.getElementById('trade-log');if(!el)return;
+  const t=getTradingData();
+  // user trades newest-first, then defaults to fill remaining slots
+  const userTrades=[...t.trades].reverse().slice(0,4);
+  const trades=[...userTrades,...DEFAULT_TRADES].slice(0,6);
+  if(!trades.length){el.innerHTML='<div style="padding:14px;text-align:center;color:var(--txt3);font-size:12px">No closed trades yet</div>';return;}
+  el.innerHTML=trades.map(tr=>`
+    <div class="tlog-row">
+      <div><div class="tlog-sym">${tr.sym}</div><div class="tlog-sub">${tr.type.toUpperCase()} · Entry $${tr.entry.toLocaleString()} → Exit $${tr.exit.toLocaleString()} · ${tr.date}</div></div>
+      <div class="tlog-pnl" style="color:${tr.pnl>=0?'var(--g)':'var(--r)'}">${tr.pnl>=0?'+':''}$${Math.abs(tr.pnl).toFixed(1)}</div>
+    </div>`).join('');
+}
+
+function toggleTradingBot(){
+  const t=getTradingData();
+  t.active=!t.active;
+  updateBotStatusUI(t.active);
+  if(t.active){
+    toast('Trading bot started — monitoring signals');
+    botInterval=setInterval(simulateSignal,8000);
+    setMoodForBot('processing');
+  } else {
+    clearInterval(botInterval);botInterval=null;
+    toast('Trading bot paused');
+    setMoodForBot('operational');
+  }
+  saveData();renderTrading();
+}
+
+function setMoodForBot(mood){applyMood('rex',mood,true);}
+
+function simulateSignal(){
+  const t=getTradingData();if(!t.active)return;
+  const types=['buy','sell','hold'];
+  const type=types[Math.floor(Math.random()*types.length)];
+  const sym=SIGNAL_SYMBOLS[Math.floor(Math.random()*SIGNAL_SYMBOLS.length)];
+  const notes=SIGNAL_NOTES[type];
+  const note=notes[Math.floor(Math.random()*notes.length)];
+  // Base prices keyed by ticker prefix (crypto: first part of pair, stocks: symbol)
+  const basePrice={BTC:67000,ETH:3500,SOL:142,AAPL:211,NVDA:890,SPY:520};
+  const ticker=sym.split('/')[0];
+  const base=basePrice[ticker]||100;
+  const rawPrice=base*(1+(Math.random()-.5)*.02);
+  // Use 2 decimal places for all prices
+  const price=rawPrice.toFixed(2);
+  const now=new Date();
+  const time=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const signal={type,sym,price:parseFloat(price).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),time,note};
+  if(!t.signals)t.signals=[];
+  t.signals.push(signal);
+  if(t.signals.length>20)t.signals=t.signals.slice(-20);
+  // Occasionally generate a closed trade from this signal (not for hold signals)
+  if(type!=='hold'&&Math.random()>.6){
+    const entry=parseFloat(price);
+    // positionDirection: +1 for buy (profit when price rises), -1 for sell (profit when price falls)
+    const positionDirection=type==='buy'?1:-1;
+    // tradeOutcome: +1 for win (60% probability), -1 for loss
+    const tradeOutcome=Math.random()>.4?1:-1;
+    // percentChange: 1-5% move
+    const percentChange=(Math.random()*4+1)*tradeOutcome;
+    const exit=parseFloat((entry*(1+positionDirection*percentChange/100)).toFixed(2));
+    // P&L = percentChange * direction * position size / 100
+    const pnl=parseFloat((percentChange*positionDirection*(t.settings?.maxPos||50)/100).toFixed(1));
+    if(!t.trades)t.trades=[];
+    t.trades.push({sym,type,entry,exit,pnl,date:now.toLocaleDateString([],{month:'short',day:'numeric'})});
+    if(t.trades.length>20)t.trades=t.trades.slice(-20);
+  }
+  saveData();
+  if(document.getElementById('s-trading')?.classList.contains('active')){renderSignalFeed();renderTradeLog();renderTrading();}
+  toast(`${type.toUpperCase()} signal — ${sym}`);
+}
+
+function addManualSignal(){
+  const sym=prompt('Symbol (e.g. BTC/USD):','BTC/USD');if(!sym?.trim())return;
+  const type=prompt('Type: buy / sell / hold','buy')?.toLowerCase();
+  if(!['buy','sell','hold'].includes(type||'')){toast('Invalid type');return;}
+  const priceRaw=prompt('Price:','67000');if(!priceRaw?.trim())return;
+  const priceNum=parseFloat(priceRaw.replace(/,/g,''));
+  if(isNaN(priceNum)||priceNum<=0){toast('Enter a valid price');return;}
+  const note=prompt('Note (optional):','')||'Manual entry';
+  const t=getTradingData();
+  if(!t.signals)t.signals=[];
+  const now=new Date();
+  t.signals.push({type,sym:sym.trim().toUpperCase(),price:priceNum.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),note});
+  saveData();renderSignalFeed();toast(`Manual ${type.toUpperCase()} signal added — ${sym.trim().toUpperCase()}`);
+}
+
+function saveRisk(){
+  const t=getTradingData();
+  t.settings.maxPos=parseFloat(document.getElementById('risk-pos')?.value)||50;
+  t.settings.stopLoss=parseFloat(document.getElementById('risk-sl')?.value)||2;
+  t.settings.takeProfit=parseFloat(document.getElementById('risk-tp')?.value)||5;
+  saveData();
+}
 
 // ─── DATA ───
 async function saveData(){
